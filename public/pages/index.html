@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data collection IIITDWD</title>
+    <!-- stylesheet -->
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <div class="bg" id="hide">
+        <div id="container">
+            <video id="gum" playsinline autoplay muted></video>
+            <video id="recorded" playsinline loop></video>
+  
+            <div>
+                <button class="button-styling" id="start">Start camera</button>
+                <button class="button-styling" id="record" disabled>Start Recording</button>
+                <button class="button-styling" id="play" disabled>Play</button>
+                <!-- <button class="button-styling" id="download" disabled>Submit</button> -->
+            </div>
+        
+            <div>
+                Recording format: <select id="codecPreferences" disabled></select>
+            </div>
+            <div>
+                <h4>Media Stream Constraints options</h4>
+                <p>Echo cancellation: <input type="checkbox" id="echoCancellation"></p>
+            </div>
+        
+            <div>
+                <span id="errorMsg"></span>
+            </div>
+        
+            <!-- <a href="https://github.com/webrtc/samples/tree/gh-pages/src/content/getusermedia/record"
+               title="View source for this page on GitHub" id="viewSource">View source on GitHub</a> -->
+        
+        </div>
+        
+        <div class="container">
+            <h1 class="heading">Data collection</h1>
+            <form id='meta-data' autocomplete="off">
+                <h1 class="card-input-heading">Language Id</h1>
+                <div class="card-input-box">
+                    <select class="form-input" name="languageid" aria-label="Default select example" required>
+                        <option selected disabled value="">Select your Language Id</option>
+                        <option value="Hindi">Hindi</option>
+                        <option value="English">English</option>
+                    </select>
+                </div>
+                <h1 class="card-input-heading">Gender</h1>
+                <div class="card-input-box">
+                    <select class="form-input" name="gender" aria-label="Default select example" required> 
+                        <option selected disabled value="">Select your Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+                <h1 class="card-input-heading">Age Group</h1>
+                <div class="card-input-box">
+                    <select class="form-input" name="agegroup" aria-label="Default select example" required>
+                        <option selected disabled value="">Select your Age Group</option>
+                        <option value="18-25">18-25 years</option>
+                        <option value="25-30">25-30 years</option>
+                        <option value="30-35">30-35 years</option>
+                    </select>
+                </div>
+                <h1 class="card-input-heading">Speaker ID</h1>
+                <div class="card-input-box">
+                    <input type="number" name="speakerid" class="card-input" min=1 pattern=" 0+\.[0-9]*[1-9][0-9]*$" required onkeypress="return event.charCode >= 48 && event.charCode <= 57" placeholder="Enter your ID here..."> 
+                </div>
+                <div class="botton-div" style="text-align:center">
+                    <input id="submit" class="button-styling" type="submit" value="Submit">
+                </div>
+            </form>
+        </div>
+    </div>
+
+<!-- include adapter for srcObject shim -->
+<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<script type="text/javascript" src="./js/main.js"></script>
+<script type="text/javascript" src="./js/jquery.js"></script>
+
+
+
+</body>
+</html>

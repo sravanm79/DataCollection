@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!--Page Title-->
+	<title>IIIT Dharwad, Data Collection</title>
+	<!--Links-->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!--Links to the external CSS Files-->
+	<link rel="stylesheet" href="./css/index.css">
+	<link rel="stylesheet" type="text/css" href="./css/footer.css">
+	<link rel="stylesheet" type="text/css" href="./css/carousel.css">
+	<link rel="stylesheet" type="text/css" href="./css/dataCollection.css">
+
+	<!--Links to the external javascript files-->
+	
+	<!--Internal CSS-->
+	<style type="text/css">
+		.aboutus {
+			margin: 50px 50px 20px 50px;
+			text-align: justify;
+			text-justify: inter-word;
+		}
+	</style>
+</head>
+<body>
+	<!--Page Header-->
+	<header class="header">
+		<h1>Data Collection Facility, IIIT, Dharwad</h1>
+	</header>
+
+	<!--Page Navigation Links-->
+	<nav class="navbar">
+		<a href="/">Home</a>
+  		<a href="aboutus">About Us</a>
+  		<a href="dataCollection">Data Collection Facility</a>
+  		<a href="contactus">Contact us</a>
+	</nav>
+	
+	<!--Section for Data-->
+	<section class="row">
+		<!--Page Left Column-->
+		<aside class="leftcol">
+			<h3></h3>
+		</aside>
+
+		<!--Page Main Cntent-->
+		<main class="main">
+			<!--
+			<h2 align="Center">
+				Welcome to the Data Collection Facility, IIIT, Dharwad
+			</h2>
+		-->
+			<!--Input Form-->
+			<section>
+				<div class="inputCount">
+					<form>
+						<label>How many sentences do you want to record: </label><br><br>
+						<input type="number" name="count">
+						<input type="button" name="submit" value="submit"><hr>
+					</form>
+				</div>
+
+				<div class="libAudio">
+					<!--
+					<h4 class="head4">Instructions</h4>
+					<ol>
+						<li>
+							Read the text carefully and when you are ready click on the	start button to start the recording.
+						</li>
+						<li>
+							When you are done with the recording click on the stop button.
+						</li>
+					</ol>
+				-->
+					
+					<fieldset class="inputCount">
+						<legend>Audio and Text</legend>
+						<textarea readonly>
+							Audio Text Here
+						</textarea>
+						<audio controls autoplay>
+  							<source src="horse.ogg" type="audio/ogg">
+  							Your browser does not support the audio tag.
+						</audio>
+					</fieldset>
+				</div>
+				<hr>
+				<!--Element to show the camera stream-->
+				<div class="accessCamera">
+					<h4 class="head4">Video Recording Window</h4>
+					<div class="accessCamera1">
+						<video class="videoStream" autoplay="true" id="videoStream" muted>
+						<!--Here camera video stream will be shown on the webpage-->
+						</video>
+					</div>
+					<br>
+					<!--
+					<button class="startCam" id="startCam">Start Camera</button>
+				-->
+					<button class="startVid" id="startVid">Start Recording</button>
+					<button class="stopVid" id="stopVid">Stop Recording</button>
+					<br>
+					<br>
+					<a id="download">Download</a>
+				</div> <hr>
+
+				<div class="displayVideo">
+					<video id="vidSave" class="vidSave" controls>
+						
+					</video>
+				</div>
+			</section>
+		</main>
+
+		<!--Page Right Column-->
+		<aside class="rightcol">
+			<h3></h3>
+		</aside>
+	</section>
+
+	<!--Page Footer-->
+	<footer class="footer">
+		<aside class="footcol">
+			<h3>About Us</h3>
+			<p>IIIT, Dharwad</p>
+		</aside>
+		<aside class="footcol">
+			<h4>Related Links</h4>
+			<a href="http://www.walchandsangli.ac.in" target="_blank">IIIT Dharwad</a> <br>
+			<a href="https://www.aicte-india.org/" target="_blank">AICTE</a> <br>
+			<a href="https://www.ugc.ac.in/" target="_blank">UGC</a> 
+		</aside>
+		<aside class="footcol">
+			<h4>Follow WCE</h4>
+			<a href="https://www.facebook.com/" target="_blank">Facebook</a> <br>
+			<a href="https://twitter.com/" target="_blank">Twitter</a>
+			<br>
+			<a href="https://www.instagram.com/" target="_blank">Instagram</a> 
+		</aside>
+		<section align="Center">
+			<i><b>All rights are reserved to IIIT Dharwad</b></i>
+		</section>
+	</footer>
+
+	<script type="text/javascript">
+		let video = document.querySelector("#videoStream");
+		let mediaRecorder;
+		navigator.mediaDevices.getUserMedia({
+	    	video: true,
+	    	audio: true
+		}).then(function(mediaStreamObj)
+		{
+            //connect the media stream to the video element
+            //let video = document.querySelector('#videoStream');
+            //if ("srcObject" in video) {
+            	video.srcObject = mediaStreamObj;
+                mediaRecorder= new MediaRecorder(mediaStreamObj);
+            //} else
+            //{
+                //old version
+                //video.src = window.URL.createObjectURL(mediaStreamObj);
+                //Recorder= new MediaRecorder(mediaStreamObj);
+            //}
+        });
+
+		//Get two buttons to assign start and stop camera functionality
+		//let start = document.getElementById('startVid');
+        //let stop = document.getElementById('stopVid');
+        
+        let chunks = [];
+        /*
+        startCam.addEventListener('click', (ev)=>
+        {
+        	navigator.mediaDevices.getUserMedia
+        	({
+	    		video: true,
+	    		audio: true
+			}).then(function(mediaStreamObj)
+			{
+				video.srcObject = mediaStreamObj;
+                mediaRecorder= new MediaRecorder(mediaStreamObj);
+        	});
+        	stopVid.disabled = true;
+    	})*/
+            
+        startVid.addEventListener('click', (ev)=>{
+        	if (mediaRecorder.state == 'inactive') {
+        		mediaRecorder.start();
+        		startVid.disabled = true;
+        		stopVid.disabled = false;
+
+        	mediaRecorder.onstop = (ev)=>{
+            let blob = new Blob(chunks, { 'type' : 'video/mp4;' });
+            chunks = [];
+            let videoURL = window.URL.createObjectURL(blob);
+            vidSave.src = videoURL;
+            const downloadLink = document.getElementById('download');
+            downloadLink.href = URL.createObjectURL(new Blob(chunks));
+      		downloadLink.download = 'acetest.webm';
+        }
+
+        mediaRecorder.ondataavailable = function(ev)
+        {
+            chunks.push(ev.data);
+            console.log(chunks);
+        }
+        	}
+        	else{
+        		startVid.disabled = false;
+        	stopVid.disabled = true;}
+            console.log(mediaRecorder.state);
+        });
+
+        stopVid.addEventListener('click', (ev)=>{
+           if (mediaRecorder.state != 'inactive') {
+        		mediaRecorder.stop();
+        		stopVid.disabled = true;
+        		startVid.disabled = false;
+        	}
+        	else{
+        		stopVid.disabled = false;
+        		startVid.disabled = true;
+        	}
+            console.log(mediaRecorder.state);
+        });
+
+
+
+	</script>
+</body>
+</html>

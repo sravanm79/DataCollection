@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IIIT Dharwad, Data Collection</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" type="text/css" href="./css/footer.css">
+    <link rel="stylesheet" type="text/css" href="./css/carousel.css">
+    <link rel="stylesheet" type="text/css" href="./css/new_userDetails.css">
+
+    <script type="text/javascript" src="./js/stickyNav.js"></script>
+    <script type="text/javascript" src="./js/jquery.js"></script>
+    <style type="text/css">
+        .aboutus {
+            margin: 50px 50px 20px 50px;
+            text-align: justify;
+            text-justify: inter-word;
+        }
+        .stickyNav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <p class="title">Data Collection Facility, IIIT, Dharwad</p>
+    </header>
+
+    <nav class="navbar" id="navbar" name="navbar">
+        <a href="/">Home</a>
+        <a href="aboutus">About Us</a>
+        <a href="registration">Patient Registration</a> <a href="consent">Consent Form</a>
+        <a href="recordData">Record Data</a>
+        <a href="contactus">Contact us</a>
+        <a href="configure">Settings</a>
+    </nav>
+    
+    <section class="row">
+        <aside class="leftcol">
+            <h3></h3>
+        </aside>
+
+        <main class="main">
+            <h2 align="Center">
+                Welcome to the Data Collection Facility for<br>
+                "Speech to Speech Translation System for Tribal Languages"
+            </h2> <hr>
+            <section>
+                <div class="userDetails">
+                    <h3 class="head5">Please fill the following details carefully.</h3>
+                    <form class="userInfo" id="userInfo" action="/" method="post">
+                        <div class="trow">
+                            <label for="username">Patient Name: </label>
+                            <input type="text" name="username" id="username" required>
+                        </div>
+                        
+                        <div class="trow">
+                            <label for="gender">Gender: </label>
+                            <select name="gender" id="gender" required>
+                                <option disabled selected value> -- Select Gender -- </option>
+                                <option value="M">Male</option>
+                                <option value="F">Female</option>
+                                <option value="O">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="trow">
+                            <label for="age">Age: </label>
+                            <input type="number" name="age" id="age" min="1" max="120" required placeholder="Enter age in years">
+                        </div>
+                        
+                        <div class="trow">
+                            <label for="maritalStatus">Marital Status: </label>
+                            <select name="maritalStatus" id="maritalStatus" required>
+                                <option disabled selected value> -- Select Marital Status -- </option>
+                                <option value="Single">Single</option>
+                                <option value="Married">Married</option>
+                                <option value="Divorced">Divorced</option>
+                                <option value="Widowed">Widowed</option>
+                            </select>
+                        </div>
+
+                        <div class="trow">
+                            <label for="education">Education: </label>
+                            <select name="education" id="education" required>
+                                <option disabled selected value> -- Select Education -- </option>
+                                <option value="Primary School">Primary School</option>
+                                <option value="High School">High School</option>
+                                <option value="PU">PU</option>
+                                <option value="Graduate">Graduate</option> <option value="Postgraduate">Postgraduate</option> <option value="Degree and Higher">Degree and Higher</option>
+                            </select>
+                        </div>
+
+                        <div class="trow">
+                            <label for="occupation">Occupation: </label>
+                            <input type="text" name="occupation" id="occupation" required placeholder="e.g., Engineer, Teacher">
+                        </div>
+
+                        <div class="trow">
+                            <label for="monthlyIncome">Monthly Income: </label>
+                            <input type="number" name="monthlyIncome" id="monthlyIncome" min="0" required placeholder="Enter income">
+                        </div>
+
+                        <div class="trow">
+                            <label for="doctorID">Assigned Doctor: </label>
+                            <select name="doctorID" id="doctorID" required>
+                                <option disabled selected value> -- Select Doctor -- </option>
+                                <option value="1">Dr. Arjun Rao</option>
+                                <option value="2">Dr. Meena Patil</option>
+                                </select>
+                        </div>
+
+                        <div class="trow">
+                            <label for="consentType">Consent Type to be given:</label>
+                            <select name="consentType" id="consentType" class="consentType" required>
+                                <option disabled selected value> -- Select Consent Type -- </option>
+                                <option value="Written">Written Consent (Data Collection Only)</option>
+                                <option value="Audio-Video">Audio-Video Consent (For Consent Video)</option>
+                            </select>
+                        </div>
+                    </form>
+                    <div id="patientIdPopup" style="display:none; position:fixed; top:30%; left:50%; transform:translate(-50%, -50%); background:#fff; border:2px solid #333; padding:30px; z-index:1000;">
+                        <span id="closePopup" style="cursor:pointer; float:right; font-size:20px;">&times;</span>
+                        <h3>Registration Successful!</h3>
+                        <p>Your Patient ID is: <span id="displayPatientId"></span></p>
+                    </div>
+                    <div class="submitDiv">
+                        <button class="subButton" name="subButton" id="subButton" value="submit" form="userInfo">
+                            Click to Proceed
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <aside class="rightcol">
+            <h3></h3>
+        </aside>
+    </section>
+
+    <footer class="footer">
+        <aside class="footcol">
+            <h3>About Us</h3>
+            <p>IIIT, Dharwad</p>
+        </aside>
+        <aside class="footcol">
+            <h4>Related Links</h4>
+            <a href="https://iiitdwd.ac.in/" target="_blank">IIIT Dharwad</a> <br>
+            <a href="https://www.aicte-india.org/" target="_blank">AICTE</a> <br>
+            <a href="https://www.ugc.ac.in/" target="_blank">UGC</a> 
+        </aside>
+        <aside class="footcol">
+            <h4>Follow IIIT Dharwad</h4>
+            <a href="https://www.facebook.com/" target="_blank">Facebook</a> <br>
+            <a href="https://twitter.com/" target="_blank">Twitter</a>
+            <br>
+            <a href="https://www.instagram.com/" target="_blank">Instagram</a> 
+        </aside>
+        <section align="Center">
+            <i><b>All rights are reserved to IIIT Dharwad</b></i>
+        </section>
+    </footer>
+
+    <script type="text/javascript">
+        // This client-side redirection logic might need adjustment.
+        // Currently, your app.js handles redirection directly after database insert.
+        // The /regResult endpoint is no longer used in app.js as written in the provided update.
+        // It's likely you want to remove this or refactor how success/error messages are displayed.
+        // For now, I've kept it as is, but be aware it might not function as expected with the new app.js logic.
+        $.get('/regResult', async function(data, status){
+            // The /regResult route in app.js is commented out.
+            // If you intend to use client-side alerts for registration success/failure,
+            // you'll need to re-implement a way for app.js to send a response
+            // that this script can then interpret.
+            // For now, the app.js is sending a redirect directly on success or failure.
+            console.log('Client-side /regResult handler fired. Check server logs for actual redirection status.');
+            console.log('Received data:', data, 'status:', status);
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('userInfo');
+            const submitBtn = document.getElementById('subButton');
+            const popup = document.getElementById('patientIdPopup');
+            const closePopup = document.getElementById('closePopup');
+            const displayPatientId = document.getElementById('displayPatientId');
+
+            submitBtn.addEventListener('click', async function(ev) {
+                ev.preventDefault();
+                const formData = new FormData(form);
+                const data = {};
+                formData.forEach((value, key) => { data[key] = value; });
+
+                try {
+                    const res = await fetch('/', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                        body: JSON.stringify(data)
+                    });
+                    const result = await res.json();
+                    if (result.success && result.patientID) {
+                        displayPatientId.textContent = result.patientID;
+                        popup.style.display = 'block';
+                    } else {
+                        alert('Registration failed. Please try again.');
+                    }
+                } catch (err) {
+                    alert('Error during registration.');
+                }
+            });
+
+            closePopup.addEventListener('click', function() {
+                popup.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+body {
+    /* General body styles can go here if you have any, otherwise keep it empty */
+}
+
+.userDetails {
+    text-align: left;
+    padding-left: 50px;
+    padding-right: 50px;
+    width: 90%;
+    overflow: hidden;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    align-content: center;
+    background-color: deepskyblue;
+    border-radius: 15px;
+    font-family: Cambria;
+    /* Added top/bottom padding for better spacing within the form container */
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.head5 {
+    text-align: center;
+    /* Add some margin below the heading for better separation from the form */
+    margin-bottom: 25px;
+}
+
+.userInfo {
+    display: table;
+    width: 100%;
+}
+
+.trow {
+    display: table-row;
+    /* Add vertical spacing between each form row */
+    margin-bottom: 20px;
+}
+
+/* Styling for all labels */
+label {
+    color: black;
+    font-size: 17px;
+    font-family: Cambria;
+    display: table-cell;
+    width: 35%; /* Fixed width for labels to align inputs */
+    padding-right: 15px; /* Space between label and input/select */
+    vertical-align: middle; /* Aligns text vertically in the middle of the cell */
+    /* Match input/select margin-bottom to keep rows consistent */
+    padding-bottom: 20px;
+}
+
+/* Consolidated styling for all input fields (text, number) and select dropdowns */
+input[type="text"],
+input[type="number"],
+select {
+    width: calc(100% - 15px); /* Calculate width, accounting for padding on the label */
+    height: auto;
+    min-height: 30px;
+    margin-bottom: 20px; /* Space below each input/select */
+    border: none;
+    border-radius: 3px;
+    padding-left: 10px; /* Internal padding for text */
+    font-family: Cambria;
+    display: table-cell;
+    box-sizing: border-box; /* Ensures padding and border are included in the element's total width */
+    color: #333; /* Darker text color for inputs */
+}
+
+/* Removed individual ID styles for #gender, #age, #qualification, #isKannada, #consentType, #username.
+   The general `input[type="text"], input[type="number"], select` rule now covers these
+   and the new fields (`maritalStatus`, `education`, `occupation`, `monthlyIncome`, `doctorID`)
+   for better consistency and less redundant code.
+   
+   If you need specific styling for any single field, you can add it back like:
+   #specificFieldId {
+       /* custom styles here */
+   }
+*/
+
+.submitDiv {
+    text-align: center;
+    /* Add some space above the submit button */
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.subButton {
+    text-align: center;
+    min-height: 40px; /* Slightly increased height for better clickability */
+    font-size: 1.1em; /* Slightly increased font size */
+    font-weight: bold;
+    font-family: Cambria, serif;
+    width: 60%; /* Wider button */
+    background-color: #4CAF50; /* A pleasant green color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+.subButton:hover {
+    background-color: #45a049; /* Darker green on hover */
+}

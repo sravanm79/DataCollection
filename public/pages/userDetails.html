@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!--Page Title-->
+	<title>IIIT Dharwad, Data Collection</title>
+	<!--Links-->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<!--Links of Required CSS files-->
+	<link rel="stylesheet" href="./css/index.css">
+	<link rel="stylesheet" type="text/css" href="./css/footer.css">
+	<link rel="stylesheet" type="text/css" href="./css/carousel.css">
+	<link rel="stylesheet" type="text/css" href="./css/userDetails.css">
+
+	<script type="text/javascript" src="./js/stickyNav.js"></script>
+	<script type="text/javascript" src="./js/jquery.js"></script>
+	<script type="text/javascript" src="./js/jquery.js"></script>
+
+	<!--Internal CSS-->
+	<style type="text/css">
+		.aboutus {
+			margin: 50px 50px 20px 50px;
+			text-align: justify;
+			text-justify: inter-word;
+		}
+		.stickyNav {
+		  position: fixed;
+		  top: 0;
+		  width: 100%;
+		}
+	</style>
+</head>
+<body>
+	<!--Page Header-->
+	<header class="header">
+		<p class="title">Data Collection Facility, IIIT, Dharwad</p>
+	</header>
+
+	<!--Page Navigation Links-->
+	<nav class="navbar" id="navbar" name="navbar">
+		<a href="/">Home</a>
+  		<a href="aboutus">About Us</a>
+  		<a href="registration">Patient Registration</a>
+  		<a href="consent">Consent Form</a>
+  		<a href="recordData">Record Data</a>
+  		<a href="contactus">Contact us</a>
+  		<a href="configure">Settings</a>
+	</nav>
+	
+	<!--Section for Data-->
+	<section class="row">
+		<!--Page Left Column-->
+		<aside class="leftcol">
+			<h3></h3>
+		</aside>
+
+		<!--Page Main Cntent-->
+		<main class="main">
+			<h2 align="Center">
+				Welcome to the Data Collection Facility for<br>
+				"Speech to Speech Translation System for Tribal Languages"
+			</h2> <hr>
+			<!--Input Form for taking the user data-->
+			<section>
+				<div class="userDetails">
+					<h3 class="head5">Please fill the following details carefully.</h3>
+					<form class="userInfo" id="userInfo" action="/" method="post">
+						<!--Gender of the user-->
+						<div class="trow">
+							<label for="gender">Gender: </label>
+							<select name="gender" id="gender" required>
+								<option disabled selected value> -- Select Gender -- </option>
+								<option value="M">Male</option>
+								<option value="F">Female</option>
+								<option value="O">Other</option>
+							</select>
+						</div>
+						<!--Age of the user-->
+						<div class="trow">
+							<label for="age">Age Group: </label>
+							<select name="age" id="age" required>
+								<option disabled selected value> -- Select Age Group -- </option>
+								<option value="18 to 25">18 to 25</option>
+								<option value="25 to 35">25 to 35</option>
+								<option value="35 to 45">35 to 45</option>
+							</select>
+						</div>
+						<!--Qualification of the user-->
+						<div class="trow">
+							<label for="qualification">Qualification: </label>
+							<select name="qualification" id="qualification" required>
+								<option disabled selected value> -- Select Qualification -- </option>
+								<option value="Primary School">Primary School</option>
+								<option value="High School">High School</option>
+								<option value="PU">PU</option>
+								<option value="Degree and Higher">Degree and Higher</option>
+							</select>
+						</div>
+
+						<!--Language of the Speaker-->
+						<div class="trow">
+							<label for="isKannada">Can the speaker read Kannada? </label>
+							<select name="isKannada" id="isKannada" required>
+								<option disabled selected default> -- Select Option -- </option>
+								<option value="true">YES</option>
+								<option value="false">NO</option>
+							</select>
+						</div>
+						
+						<!--Consent type to be given by the Speaker-->
+						<div class="trow">
+							<label for="consentType">Consent Type to be given:</label>
+							<select name="consentType" id="consentType" class="consentType" required>
+								<option disabled selected default> -- Select Consent Type -- </option>
+								<option value="Written">Written Consent</option>
+								<option value="Audio-Video">Audio-Video Consent</option>
+							</select>
+						</div>
+
+						<!--User Name of the user-->
+						<div class="trow">
+							<label for="username">Speaker ID: </label>
+							<input type="text" name="username" id="username" required>
+						</div>
+					</form>
+					
+					<!--Submit Button to submit the data and redirect to the video recording page-->
+					<div class="submitDiv">
+						<!-- <input type="button" value="Register Speaker" name="subButton" class="subButton" id="subButton" form="userInfo"> -->
+						<button class="subButton" name="subButton" id="subButton"value="submit" form="userInfo">
+							Click to Proceed
+						</button>
+					</div>
+				</div>
+			</section>
+		</main>
+		
+		<!--Page Right Column-->
+		<aside class="rightcol">
+			<h3></h3>
+		</aside>
+	</section>
+
+	<!--Page Footer-->
+	<footer class="footer">
+		<aside class="footcol">
+			<h3>About Us</h3>
+			<p>IIIT, Dharwad</p>
+		</aside>
+		<aside class="footcol">
+			<h4>Related Links</h4>
+			<a href="https://iiitdwd.ac.in/" target="_blank">IIIT Dharwad</a> <br>
+			<a href="https://www.aicte-india.org/" target="_blank">AICTE</a> <br>
+			<a href="https://www.ugc.ac.in/" target="_blank">UGC</a> 
+		</aside>
+		<aside class="footcol">
+			<h4>Follow IIIT Dharwad</h4>
+			<a href="https://www.facebook.com/" target="_blank">Facebook</a> <br>
+			<a href="https://twitter.com/" target="_blank">Twitter</a>
+			<br>
+			<a href="https://www.instagram.com/" target="_blank">Instagram</a> 
+		</aside>
+		<section align="Center">
+			<i><b>All rights are reserved to IIIT Dharwad</b></i>
+		</section>
+	</footer>
+
+	<script type="text/javascript">
+		$.get('/regResult', async function(data, status){
+			status = data;
+			if(status == 1)
+				alert('Registration successfull.');
+			else
+				alert('Error Occured. Try Again.')
+			console.log('Error');
+		})
+	</script>
+</body>
+</html>

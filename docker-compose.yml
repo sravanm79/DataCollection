@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: my-node-app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    command: ["./wait-for-it.sh", "db:3306", "--", "node", "new_app.js"]
+    volumes:
+      - .:/app
+    environment:
+      MYSQL_HOST: db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: yourpassword
+      MYSQL_DATABASE: hospitaldb
+
+  db:
+    image: mysql:5.7
+    platform: linux/amd64
+    container_name: mysql-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: yourpassword
+      MYSQL_DATABASE: hospitaldb
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./database/patientdata.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  db_data:

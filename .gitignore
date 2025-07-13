@@ -1,0 +1,9 @@
+node_modules
+
+/public/icons
+
+/public/images
+
+Data_Collection_ASR.sublime-project
+
+Data_Collection_ASR.sublime-workspace

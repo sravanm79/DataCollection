@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  
+  <style>
+    #liveWaveform { width: 100%; height: 120px; background: #eee; }
+  </style>
+</head>
+<body>
+  <button id="start">Start</button>
+  <button id="stop" disabled>Stop</button>
+  <div id="liveWaveform"></div>
+  <script src="https://unpkg.com/wavesurfer.js@6/dist/wavesurfer.min.js"></script>
+    <script src="https://unpkg.com/wavesurfer.js@6/dist/plugin/wavesurfer.microphone.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var livewavesurfer = WaveSurfer.create({
+        container: '#liveWaveform',
+        waveColor: 'blue',
+        interact: false,
+        cursorWidth: 1,
+        normalize: true,
+        backgroundColor: '#C0C0C0',
+        responsive: true,
+        plugins: [
+          WaveSurfer.microphone.create()
+        ]
+      });
+
+      livewavesurfer.microphone.on('deviceReady', function(stream) {
+        console.log('Device ready!', stream);
+      });
+      livewavesurfer.microphone.on('deviceError', function(code) {
+        console.warn('Device error: ' + code);
+      });
+
+      const startBtn = document.getElementById('start');
+      const stopBtn = document.getElementById('stop');
+
+      startBtn.onclick = function() {
+        startBtn.disabled = true;
+        stopBtn.disabled = false;
+        livewavesurfer.microphone.start();
+      };
+      stopBtn.onclick = function() {
+        livewavesurfer.microphone.stop();
+        startBtn.disabled = false;
+        stopBtn.disabled = true;
+      };
+    });
+  </script>
+</body>
+</html>

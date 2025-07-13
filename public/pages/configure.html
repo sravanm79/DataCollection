@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!--Page Title-->
+	<title>IIIT Dharwad, Data Collection</title>
+	<!--Links-->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="./css/index.css">
+	<link rel="stylesheet" type="text/css" href="./css/footer.css">
+	<link rel="stylesheet" type="text/css" href="./css/configure.css">
+
+	<script type="text/javascript" src="./js/stickyNav.js"></script>
+	<!--This is an offline jQuery file i.e. No need of internet connectivity-->
+	<script type="text/javascript" src="./js/jquery.js"></script>
+	<script type="text/javascript" src="./js/configure.js"></script>
+
+	<style type="text/css">
+		.aboutus {
+			margin: 50px 50px 20px 50px;
+			text-align: justify;
+			text-justify: inter-word;
+		}
+		.stickyNav {
+		  position: fixed;
+		  top: 0;
+		  width: 100%;
+		}
+	</style>
+</head>
+<body>
+	<!--Page Header-->
+	<header class="header">
+		<p class="title">Data Collection Facility, IIIT, Dharwad</p>
+	</header>
+
+	<!--Page Navigation Links-->
+	<nav class="navbar" id="navbar" name="navbar">
+		<a href="/">Home</a>
+  		<a href="aboutus">About Us</a>
+  		<a href="registration">Patient Registration</a>
+  		<a href="consent">Consent Form</a>
+  		<a href="recordData">Record Data</a>
+  		<a href="contactus">Contact us</a>
+  		<a href="configure">Settings</a>
+	</nav>
+	
+	<!--Section for Data-->
+	<section class="row">
+		<!--Page Left Column-->
+		<aside class="leftcol">
+			<h3></h3>
+		</aside>
+
+		<!--Page Main Cntent-->
+		<main class="main">
+			<h2 align="Center">Set Sentence Number</h2>
+			<section class="configurePointer">
+				<div class="configPointer"></div>
+				<form class="configForm" method="post" name="configForm">
+					<div class="trow">
+						<label for="sentenceNo" class="sentenceLab" id="sentenceLab" name="sentenceLab">Set Sentence Number: </label>
+					</div>
+					<div class="trow">
+						<input type="number" name="sentenceNo" class="sentenceNo" id="sentenceNo">
+					</div>
+					<div class="trow">
+						<!-- <input type="button" name="setPtr" class="setPtr" id="setPtr" value="Click to Proceed" form="configForm"> -->
+						<button class="setPtr" name="setPtr" id="setPtr">Click Here</button>
+					</div>
+				</form>
+			</section>
+		</main>
+
+		<!--Page Right Column-->
+		<aside class="rightcol">
+			<h3></h3>
+		</aside>
+	</section>
+
+	<!--Page Footer-->
+	<footer class="footer">
+		<aside class="footcol">
+			<h3>About Us</h3>
+			<p>IIIT, Dharwad</p>
+		</aside>
+		<aside class="footcol">
+			<h4>Related Links</h4>
+			<a href="https://iiitdwd.ac.in/" target="_blank">IIIT Dharwad</a> <br>
+			<a href="https://www.aicte-india.org/" target="_blank">AICTE</a> <br>
+			<a href="https://www.ugc.ac.in/" target="_blank">UGC</a> 
+		</aside>
+		<aside class="footcol">
+			<h4>Follow IIIT Dharwad</h4>
+			<a href="https://www.facebook.com/" target="_blank">Facebook</a> <br>
+			<a href="https://twitter.com/" target="_blank">Twitter</a>
+			<br>
+			<a href="https://www.instagram.com/" target="_blank">Instagram</a> 
+		</aside>
+		<section align="Center">
+			<i><b>All rights are reserved to IIIT Dharwad</b></i>
+		</section>
+	</footer>
+
+	<script type="text/javascript">
+		updatePointer();
+	</script>
+</body>
+</html>
