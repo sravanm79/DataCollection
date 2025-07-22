@@ -1,6 +1,6 @@
 /*
 *   This script has been generated for the project titled
-*   "SPEECH TO SPEECH TRANSLATION SYSTEM FOR TRIBAL LANGUAGES"
+*   "Voice Data Collection for Psychiatric Evaluation and Research"
 *   The original author of the script is
 *   Swapnil S Sontakke, Project Associate, IIIT, Dharwad
 *   Year: February, 2022

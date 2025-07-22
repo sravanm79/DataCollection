@@ -11,10 +11,11 @@ services:
     command: ["./wait-for-it.sh", "db:3306", "--", "node", "new_app.js"]
     volumes:
       - .:/app
+      - /app/node_modules  # prevent overwriting node_modules with empty host copy
     environment:
       MYSQL_HOST: db
       MYSQL_USER: root
-      MYSQL_PASSWORD: yourpassword
+      MYSQL_PASSWORD: mypassword
       MYSQL_DATABASE: hospitaldb
 
   db:
@@ -23,13 +24,14 @@ services:
     container_name: mysql-db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: yourpassword
+      MYSQL_ROOT_PASSWORD: mypassword
       MYSQL_DATABASE: hospitaldb
     ports:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
-      - ./database/patientdata.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./database/asrpatientinfo.sql:/docker-entrypoint-initdb.d/init.sql
 
 volumes:
   db_data:
+

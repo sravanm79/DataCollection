@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IIIT Dharwad, Data Collection</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+    <link rel="stylesheet" href="/css/index.css">
+	<link rel="stylesheet" href="/css/footer.css">
+	<link rel="stylesheet" href="/css/carousel.css">
+    <!-- Tailwind CSS CDN -->
+
+    <style type="text/css">
+        /* Custom styles for header, nav, and footer to mimic original structure with Tailwind */
+        body {
+            font-family: "Inter", sans-serif;
+            margin: 0;
+            background-color: #f3f4f6; /* Light gray background */
+        }
+
+        
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 1rem;
+        }
+        .leftcol, .rightcol {
+            flex: 1;
+            padding: 1rem;
+            min-width: 150px; /* Adjust as needed */
+            max-width: 20%; /* Adjust as needed */
+            background-color: #f3f4f6; /* Match body background */
+        }
+        .main {
+            flex: 3;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            min-width: 300px; /* Ensure it doesn't get too small */
+        }
+       
+        .copyright {
+            background-color: #111827; /* Even darker for copyright */
+            color: #d1d5db;
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.875rem;
+            border-radius: 0.5rem; /* Rounded corners */
+            margin: 1rem; /* Margin around the copyright */
+        }
+
+        /* Styles specific to the recording page content */
+        canvas {
+            display: block;
+            margin: 10px auto;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .message-display {
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .message-success {
+            background-color: #d1fae5; /* Green-100 */
+            color: #065f46; /* Green-700 */
+        }
+        .message-error {
+            background-color: #fee2e2; /* Red-100 */
+            color: #991b1b; /* Red-700 */
+        }
+        .message-info {
+            background-color: #dbeafe; /* Blue-100 */
+            color: #1e40af; /* Blue-700 */
+        }
+        .main {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+            margin: 30px auto;
+            padding: 38px 32px 42px 32px;
+            max-width: 800px;
+            min-width: 320px;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        .main h2 {
+        color: #22314e;
+        font-size: 2rem;
+        font-weight: 600;
+        margin: 0 0 18px 0;
+        text-align: center;
+        letter-spacing: .5px;
+        }
+
+        .main hr {
+        border: none;
+        border-top: 1.5px solid #e5e7eb;
+        margin: 18px 0 32px 0;
+        }
+
+        .main label {
+        color: #374151;
+        font-size: 1rem;
+        font-weight: 600;
+        display: block;
+        margin-bottom: 6px;
+        }
+
+        .main input[type="text"] {
+        width: 100%;
+        font-size: 1rem;
+        padding: 12px;
+        border: 1.5px solid #d1d5db;
+        border-radius: 7px;
+        background: #f9fafb;
+        color: #333;
+        margin-bottom: 12px;
+        transition: border 0.17s;
+        outline: none;
+        }
+
+        .main input[type="text"]:focus {
+        border-color: #2563eb;
+        background: #fff;
+        }
+
+        .main button {
+        display: inline-block;
+        font-size: 1rem;
+        font-weight: 600;
+        padding: 11px 24px;
+        margin-bottom: 6px;
+        border: none;
+        border-radius: 7px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+        transition: background 0.17s, color 0.17s, box-shadow 0.15s, transform .07s;
+        cursor: pointer;
+        }
+
+        #checkPatientIdBtn {
+        background: #2563eb;
+        color: #fff;
+        margin-right: 9px;
+        }
+        #checkPatientIdBtn:hover {
+        background: #173474;
+        }
+
+        #registerPatientBtn {
+        background: #16a34a;
+        color: #fff;
+        }
+        #registerPatientBtn:hover {
+        background: #0e7230;
+        }
+
+        #startRecordingBtn {
+        background: #ef4444;
+        color: #fff;
+        min-width: 140px;
+        }
+        #startRecordingBtn:hover {
+        background: #971e1e;
+        }
+
+        #stopRecordingBtn {
+        background: #eab308;
+        color: #222;
+        min-width: 140px;
+        }
+        #stopRecordingBtn:hover {
+        background: #b6840a;
+        color: #fff;
+        }
+
+        #submitRecordingBtn {
+        background: #22c55e;
+        color: #fff;
+        min-width: 160px;
+        }
+        #submitRecordingBtn:hover {
+        background: #15803d;
+        }
+
+        /* Additional action buttons */
+        #playRecordedAudioBtn {
+        background: #9333ea;
+        color: #fff;
+        }
+        #playRecordedAudioBtn:hover {
+        background: #6514bd;
+        }
+        #fetchAndPlayExistingAudioBtn {
+        background: #2563eb;
+        color: #fff;
+        }
+        #fetchAndPlayExistingAudioBtn:hover {
+        background: #173474;
+        }
+
+        button:disabled,
+        button[disabled] {
+        opacity: 0.56 !important;
+        cursor: not-allowed !important;
+        pointer-events: none;
+        }
+
+        .message-display {
+        display: none;
+        font-size: 1.02em;
+        font-weight: 500;
+        margin: 22px 0;
+        border-radius: 8px;
+        padding: 12px;
+        text-align: center;
+        }
+        .message-display.bg-green-100, .message-success {
+        display: block;
+        background: #dcfce7;
+        color: #166534;
+        }
+        .message-display.bg-red-100, .message-error {
+        display: block;
+        background: #fee2e2;
+        color: #991b1b;
+        }
+        .message-display.bg-blue-100, .message-info {
+        display: block;
+        background: #dbeafe;
+        color: #1e40af;
+        }
+
+        /* Canvas styles */
+        .main canvas {
+        display: block;
+        width: 100%;
+        min-width: 220px;
+        max-width: 800px;
+        margin: 8px auto 18px auto;
+        background: #f3f4f6;
+        border: 1.5px solid #cbd5e1;
+        border-radius: 7px;
+        box-shadow: 0 0.5px 7px rgba(17, 24, 39, 0.07);
+        }
+
+        /* Audio player styling */
+        .main audio {
+        width: 100%;
+        outline: none;
+        border-radius: 9px;
+        margin-bottom: 18px;
+        background: #f1f1fa;
+        box-shadow: 0 0.5px 5px rgba(60,60,65,.06);
+        }
+
+        /* Section headers and sublabels */
+        .main p {
+        color: #52525b;
+        font-size: 1em;
+        margin-bottom: 11px;
+        }
+        .main .text-center {
+        text-align: center;
+        }
+
+        .flex {
+        display: flex;
+        gap: 18px;
+        }
+        .flex.flex-wrap {
+        flex-wrap: wrap;
+        }
+        .flex.justify-center {
+        justify-content: center;
+        }
+
+        /* Margin helpers to separate blocks */
+        .mb-2 { margin-bottom: 8px !important; }
+        .mb-6 { margin-bottom: 32px !important; }
+        .mt-2 { margin-top: 6px !important; }
+        .mt-4 { margin-top: 15px !important; }
+
+        /* Responsive for smaller screens */
+        @media (max-width: 600px) {
+        .main {
+            padding: 18px 7px;
+            min-width: 0;
+            max-width: 100vw;
+        }
+        .main h2 {
+            font-size: 1.3rem;
+        }
+        .main canvas {
+            min-width: 0; max-width: 100vw;
+            height: 50px;
+        }
+        .flex {
+            flex-direction: column;
+            gap: 10px;
+        }
+        button, input[type="text"] {
+            width: 100% !important;
+            margin-right: 0 !important;
+            min-width: 0 !important;
+        }
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Page Header -->
+    <header class="header">
+        <p class="title">Data Collection Facility, IIIT, Dharwad</p>
+    </header>
+
+    <!-- Page Navigation Links -->
+    <nav class="navbar" id="navbar" name="navbar">
+        <a href="/">Home</a>
+        <a href="aboutus">About Us</a>
+        <a href="registration">Patient Registration</a>
+        <a href="consent">Consent Form</a>
+        <a href="recordData">Record Data</a>
+        <a href="contactus">Contact us</a>
+        <!-- <a href="configure">Settings</a> -->
+    </nav>
+    
+    <!-- Section for Main Data -->
+    <section class="row">
+        <!-- Page Left Column: To keep the left side blank -->
+        <aside class="leftcol">
+            <h3></h3>
+        </aside>
+
+        <!-- Page Main Content -->
+        <main class="main">
+            <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
+                Audio Recording for "Speech to Speech Translation System"
+            </h2>
+            <hr class="my-6 border-gray-300">
+
+            <div class="mb-6">
+                <label for="patientId" class="block text-gray-700 text-sm font-bold mb-2">
+                    Speaker ID (Patient ID):
+                </label>
+                <input
+                    type="text"
+                    id="patientId"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"
+                    placeholder="Enter Patient ID (e.g., P001)"
+                />
+                <button
+                    id="checkPatientIdBtn"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out w-full sm:w-auto"
+                >
+                    Check Speaker ID
+                </button>
+                <button
+                    id="registerPatientBtn"
+                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out w-full sm:w-auto mt-2 sm:ml-2 hidden"
+                    onclick="window.location.href='registration'"
+                >
+                    Register New Patient
+                </button>
+            </div>
+
+            <div id="messageDisplay" class="message-display hidden"></div>
+
+            <div class="mb-6 text-center">
+                <p class="text-gray-600 text-sm mb-2">Live Waveform:</p>
+                <canvas id="liveWaveformCanvas" width="800" height="60" class="w-full h-16"></canvas>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-4 mb-6">
+                <button
+                    id="startRecordingBtn"
+                    class="bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled
+                >
+                    Start Recording
+                </button>
+                <button
+                    id="stopRecordingBtn"
+                    class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled
+                >
+                    Stop Recording
+                </button>
+                <button
+                    id="submitRecordingBtn"
+                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled
+                >
+                    Submit Recording
+                </button>
+            </div>
+
+            <div class="mb-6 text-center">
+                <p class="text-gray-600 text-sm mb-2">Recorded Audio Playback:</p>
+                <audio id="audioPlayer" controls class="w-full rounded-lg shadow-sm"></audio>
+                <p class="text-gray-600 text-sm mt-4 mb-2">Recorded Waveform:</p>
+                <canvas id="recordedWaveformCanvas" width="800" height="60" class="w-full h-16"></canvas>
+            </div>
+
+            <div class="flex justify-center">
+                <button
+                    id="playRecordedAudioBtn"
+                    class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed mr-4"
+                    disabled
+                >
+                    Play Recorded Audio
+                </button>
+                <button
+                    id="fetchAndPlayExistingAudioBtn"
+                    class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled
+                >
+                    Fetch & Play Existing Audio
+                </button>
+            </div>
+        </main>
+        
+        <aside class="rightcol">
+            <h3></h3>
+        </aside>
+    </section>
+
+    <!-- Page Footer -->
+    <footer class="footer">
+		<aside class="footcol">
+			<h3>About Us</h3>
+			<p>IIIT, Dharwad</p>
+		</aside>
+		<aside class="footcol">
+			<h4>Related Links</h4>
+			<a href="https://iiitdwd.ac.in/" target="_blank">IIIT Dharwad</a> <br>
+			<a href="https://www.aicte-india.org/" target="_blank">AICTE</a> <br>
+			<a href="https://www.ugc.ac.in/" target="_blank">UGC</a> 
+		</aside>
+		<aside class="footcol">
+			<h4>Follow IIIT Dharwad</h4>
+			<a href="https://www.facebook.com/" target="_blank">Facebook</a> <br>
+			<a href="https://twitter.com/" target="_blank">Twitter</a>
+			<br>
+			<a href="https://www.instagram.com/" target="_blank">Instagram</a> 
+		</aside>
+		<section align="Center">
+			<i><b>All rights are reserved to IIIT Dharwad</b></i>
+		</section>
+	</footer>
+
+    <script type="text/javascript">
+        // Utility function to convert WebM Blob to WAV Blob
+        const convertToWav = async (webmBlob) => {
+            return new Promise((resolve) => {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const fileReader = new FileReader();
+
+                fileReader.onload = async () => {
+                    const arrayBuffer = fileReader.result;
+                    const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+                    const numOfChannels = audioBuffer.numberOfChannels;
+                    const sampleRate = audioBuffer.sampleRate;
+                    const format = 1; // PCM (uncompressed)
+                    const bitDepth = 16; // 16-bit PCM
+
+                    let len = audioBuffer.length * numOfChannels * 2; // 2 bytes per sample for 16-bit
+                    let view = new DataView(new ArrayBuffer(44 + len)); // 44 bytes for WAV header
+
+                    // RIFF chunk descriptor
+                    writeString(view, 0, 'RIFF');
+                    view.setUint32(4, 36 + len, true); // ChunkSize
+                    writeString(view, 8, 'WAVE');
+
+                    // FMT sub-chunk
+                    writeString(view, 12, 'fmt ');
+                    view.setUint32(16, 16, true); // Subchunk1Size (16 for PCM)
+                    view.setUint16(20, format, true); // AudioFormat (1 for PCM)
+                    view.setUint16(22, numOfChannels, true); // NumChannels
+                    view.setUint32(24, sampleRate, true); // SampleRate
+                    view.setUint32(28, sampleRate * numOfChannels * (bitDepth / 8), true); // ByteRate
+                    view.setUint16(32, numOfChannels * (bitDepth / 8), true); // BlockAlign
+                    view.setUint16(34, bitDepth, true); // BitsPerSample
+
+                    // DATA sub-chunk
+                    writeString(view, 36, 'data');
+                    view.setUint32(40, len, true); // Subchunk2Size
+
+                    // Write audio data
+                    let offset = 44;
+                    for (let i = 0; i < audioBuffer.numberOfChannels; i++) {
+                        const channelData = audioBuffer.getChannelData(i);
+                        for (let j = 0; j < channelData.length; j++) {
+                            let s = Math.max(-1, Math.min(1, channelData[j]));
+                            s = s < 0 ? s * 0x8000 : s * 0x7FFF; // Convert to 16-bit signed int
+                            view.setInt16(offset, s, true);
+                            offset += 2;
+                        }
+                    }
+                    resolve(new Blob([view], { type: 'audio/wav' }));
+                };
+
+                fileReader.readAsArrayBuffer(webmBlob);
+            });
+        };
+
+        function writeString(view, offset, s) {
+            for (let i = 0; i < s.length; i++) {
+                view.setUint8(offset + i, s.charCodeAt(i));
+            }
+        }
+
+        // DOM Elements
+        const patientIdInput = document.getElementById('patientId');
+        const checkPatientIdBtn = document.getElementById('checkPatientIdBtn');
+        const registerPatientBtn = document.getElementById('registerPatientBtn');
+        const messageDisplay = document.getElementById('messageDisplay');
+        const liveWaveformCanvas = document.getElementById('liveWaveformCanvas');
+        const recordedWaveformCanvas = document.getElementById('recordedWaveformCanvas');
+        const startRecordingBtn = document.getElementById('startRecordingBtn');
+        const stopRecordingBtn = document.getElementById('stopRecordingBtn');
+        const submitRecordingBtn = document.getElementById('submitRecordingBtn');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const playRecordedAudioBtn = document.getElementById('playRecordedAudioBtn');
+        const fetchAndPlayExistingAudioBtn = document.getElementById('fetchAndPlayExistingAudioBtn');
+
+        // State variables (simulated with global vars for vanilla JS)
+        let isPatientValid = false;
+        let isRecording = false;
+        let recordedAudioBlob = null;
+        let isPlaying = false;
+        let loading = false; // For disabling buttons during async ops
+
+        // Audio API variables
+        let audioContext = null;
+        let analyser = null;
+        let microphoneStream = null;
+        let liveWaveformAnimationId = null;
+        let mediaRecorder = null;
+        let recordedChunks = [];
+
+        // Helper to update message display
+        function updateMessage(msg, type = 'info') {
+            messageDisplay.textContent = msg;
+            messageDisplay.classList.remove('hidden', 'bg-red-100', 'text-red-700', 'bg-green-100', 'text-green-700', 'bg-blue-100', 'text-blue-700');
+            if (type === 'error') {
+                messageDisplay.classList.add('bg-red-100', 'text-red-700');
+            } else if (type === 'success') {
+                messageDisplay.classList.add('bg-green-100', 'text-green-700');
+            } else {
+                messageDisplay.classList.add('bg-blue-100', 'text-blue-700');
+            }
+            messageDisplay.classList.remove('hidden');
+        }
+
+        // Helper to set button states
+        function setButtonStates() {
+            patientIdInput.disabled = loading || isRecording || isPlaying;
+            checkPatientIdBtn.disabled = loading || isRecording || isPlaying || !patientIdInput.value.trim();
+            // registerPatientBtn.disabled is handled by its onclick directly
+            
+            startRecordingBtn.disabled = !isPatientValid || isRecording || loading || isPlaying;
+            stopRecordingBtn.disabled = !isRecording || loading || isPlaying;
+            submitRecordingBtn.disabled = !recordedAudioBlob || isRecording || loading || isPlaying;
+            playRecordedAudioBtn.disabled = !recordedAudioBlob || isRecording || loading || isPlaying;
+            fetchAndPlayExistingAudioBtn.disabled = !isPatientValid || isRecording || loading || isPlaying;
+
+            // Show/hide register button based on patient validation status
+            if (!isPatientValid && patientIdInput.value.trim() && messageDisplay.textContent.includes("not found")) {
+                registerPatientBtn.classList.remove('hidden');
+            } else {
+                registerPatientBtn.classList.add('hidden');
+            }
+        }
+
+        // Waveform drawing utility for live input
+        const drawWaveform = (analyserNode, canvasCtx, canvasEl, dataArray, animationIdRef) => {
+            animationIdRef.current = requestAnimationFrame(() => drawWaveform(analyserNode, canvasCtx, canvasEl, dataArray, animationIdRef));
+
+            analyserNode.getByteFrequencyData(dataArray);
+
+            canvasCtx.fillStyle = '#f9f9f9';
+            canvasCtx.fillRect(0, 0, canvasEl.width, canvasEl.height);
+
+            const barWidth = (canvasEl.width / dataArray.length) * 2.5;
+            let barHeight;
+            let x = 0;
+
+            for (let i = 0; i < dataArray.length; i++) {
+                barHeight = dataArray[i] / 2;
+
+                canvasCtx.fillStyle = `rgb(${barHeight + 100}, 50, 50)`;
+                canvasCtx.fillRect(x, canvasEl.height - barHeight, barWidth, barHeight);
+
+                x += barWidth + 1;
+            }
+        };
+
+        // Initialize Web Audio API for live waveform
+        async function initLiveWaveform() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioContext.state === 'suspended') {
+                await audioContext.resume();
+            }
+
+            try {
+                if (microphoneStream) {
+                    microphoneStream.getTracks().forEach(track => track.stop());
+                }
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    audio: {
+                        echoCancellation: false,
+                        noiseSuppression: false,
+                        autoGainControl: false,
+                        sampleRate: 44100
+                    }
+                });
+                microphoneStream = stream;
+
+                const source = audioContext.createMediaStreamSource(stream);
+                analyser = audioContext.createAnalyser();
+                analyser.fftSize = 256;
+                analyser.smoothingTimeConstant = 0.8;
+                source.connect(analyser);
+
+                const canvasCtx = liveWaveformCanvas.getContext('2d');
+                const bufferLength = analyser.frequencyBinCount;
+                const dataArray = new Uint8Array(bufferLength);
+
+                // Use a ref-like object for animation ID in vanilla JS
+                const animationIdRef = { current: null };
+                drawWaveform(analyser, canvasCtx, liveWaveformCanvas, dataArray, animationIdRef);
+                liveWaveformAnimationId = animationIdRef.current; // Store the actual ID
+                updateMessage('Microphone ready.', 'info');
+                return true;
+            } catch (error) {
+                console.error('Error accessing microphone:', error);
+                updateMessage(`Error accessing microphone: ${error.message}. Please allow microphone access.`, 'error');
+                if (liveWaveformAnimationId) {
+                    cancelAnimationFrame(liveWaveformAnimationId);
+                    liveWaveformAnimationId = null;
+                }
+                if (microphoneStream) {
+                    microphoneStream.getTracks().forEach(track => track.stop());
+                    microphoneStream = null;
+                }
+                return false;
+            }
+        }
+
+        // Stop live waveform
+        function stopLiveWaveform() {
+            if (liveWaveformAnimationId) {
+                cancelAnimationFrame(liveWaveformAnimationId);
+                liveWaveformAnimationId = null;
+            }
+            if (microphoneStream) {
+                microphoneStream.getTracks().forEach(track => track.stop());
+                microphoneStream = null;
+            }
+            if (analyser && audioContext) {
+                analyser.disconnect();
+                analyser = null;
+            }
+            const canvasCtx = liveWaveformCanvas.getContext('2d');
+            canvasCtx.clearRect(0, 0, liveWaveformCanvas.width, liveWaveformCanvas.height);
+        }
+
+        // Draw waveform for recorded audio
+        async function drawRecordedWaveform(audioBlob) {
+            const canvasCtx = recordedWaveformCanvas.getContext('2d');
+            canvasCtx.clearRect(0, 0, recordedWaveformCanvas.width, recordedWaveformCanvas.height);
+
+            if (!audioBlob) return;
+
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioContext.state === 'suspended') {
+                await audioContext.resume();
+            }
+
+            const arrayBuffer = await audioBlob.arrayBuffer();
+            const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+            const data = audioBuffer.getChannelData(0); // Get data from the first channel
+            const step = Math.ceil(data.length / recordedWaveformCanvas.width);
+            const amp = recordedWaveformCanvas.height / 2;
+
+            canvasCtx.beginPath();
+            canvasCtx.strokeStyle = '#3B82F6'; // Blue color for recorded waveform
+            canvasCtx.lineWidth = 1;
+
+            for (let i = 0; i < recordedWaveformCanvas.width; i++) {
+                let min = 1.0;
+                let max = -1.0;
+                for (let j = 0; j < step; j++) {
+                    const datum = data[(i * step) + j];
+                    if (datum < min) min = datum;
+                    if (datum > max) max = datum;
+                }
+                canvasCtx.lineTo(i, (1 + min) * amp);
+                canvasCtx.lineTo(i, (1 + max) * amp);
+            }
+            canvasCtx.stroke();
+        }
+
+        // Patient ID validation (uses /checkPatient route)
+        async function checkPatientId() {
+            const pId = patientIdInput.value.trim();
+            if (!pId) {
+                updateMessage('Please enter a Speaker ID.', 'error');
+                isPatientValid = false;
+                setButtonStates();
+                return false;
+            }
+
+            loading = true;
+            setButtonStates();
+            updateMessage('Checking Speaker ID...', 'info');
+            try {
+                const response = await fetch('/checkPatient', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ patientID: pId }) // Use patientID
+                });
+                const data = await response.json();
+
+                if (response.ok && data.success) { // Check data.success
+                    updateMessage(`Speaker ID "${pId}" found. You can now record.`, 'success');
+                    isPatientValid = true;
+                    return true;
+                } else {
+                    updateMessage(data.message || `Speaker ID "${pId}" not found. Please register first.`, 'error');
+                    isPatientValid = false;
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error checking patient ID:', error);
+                updateMessage(`Error checking Speaker ID: ${error.message}`, 'error');
+                isPatientValid = false;
+                return false;
+            } finally {
+                loading = false;
+                setButtonStates();
+            }
+        }
+
+        // Start Recording
+        async function startRecording() {
+            if (!isPatientValid) {
+                updateMessage('Please validate Speaker ID first.', 'error');
+                return;
+            }
+            if (!microphoneStream) {
+                const success = await initLiveWaveform(); // Ensure microphone is ready
+                if (!success) {
+                    updateMessage('Microphone not available. Cannot start recording.', 'error');
+                    return;
+                }
+            }
+
+            recordedChunks = [];
+            recordedAudioBlob = null;
+            isRecording = true;
+            updateMessage('Recording...', 'info');
+            setButtonStates();
+
+            mediaRecorder = new MediaRecorder(microphoneStream);
+
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    recordedChunks.push(event.data);
+                }
+            };
+
+            mediaRecorder.onstop = async () => {
+                const webmBlob = new Blob(recordedChunks, { type: 'audio/webm' });
+                try {
+                    const wavBlob = await convertToWav(webmBlob);
+                    recordedAudioBlob = wavBlob;
+                    drawRecordedWaveform(wavBlob);
+                    updateMessage('Recording stopped. Ready to submit or play.', 'success');
+                } catch (error) {
+                    console.error('Error converting to WAV:', error);
+                    updateMessage(`Error processing audio: ${error.message}`, 'error');
+                } finally {
+                    setButtonStates();
+                }
+            };
+
+            mediaRecorder.start();
+        }
+
+        // Stop Recording
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+                isRecording = false;
+                stopLiveWaveform();
+                setButtonStates();
+            }
+        }
+
+        // Submit Recording
+        async function submitRecording() {
+            if (!recordedAudioBlob) {
+                updateMessage('No audio recorded to submit.', 'error');
+                return;
+            }
+            const pId = patientIdInput.value.trim();
+
+            loading = true;
+            setButtonStates();
+            updateMessage('Submitting recording...', 'info');
+            try {
+                const formData = new FormData();
+                formData.append('patientId', pId); // Use patientId as backend expects
+                formData.append('audioFile', recordedAudioBlob, 'recording.wav');
+
+                const response = await fetch('/api/uploadAudio', { // Corrected to /api/uploadAudio
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    updateMessage('Recording submitted successfully!', 'success');
+                    recordedAudioBlob = null; // Clear recorded audio
+                    drawRecordedWaveform(null); // Clear waveform
+                } else {
+                    updateMessage(data.message || 'Failed to submit recording.', 'error');
+                }
+            } catch (error) {
+                console.error('Error submitting recording:', error);
+                updateMessage(`Error submitting recording: ${error.message}`, 'error');
+            } finally {
+                loading = false;
+                setButtonStates();
+            }
+        }
+
+        // Play Recorded Audio (either newly recorded or fetched)
+        async function playAudio(audioBlobToPlay = recordedAudioBlob) {
+            if (!audioBlobToPlay) {
+                updateMessage('No audio available to play.', 'error');
+                return;
+            }
+
+            if (audioPlayer) {
+                const audioUrl = URL.createObjectURL(audioBlobToPlay);
+                audioPlayer.src = audioUrl;
+                audioPlayer.onended = () => {
+                    isPlaying = false;
+                    setButtonStates();
+                };
+                audioPlayer.play();
+                isPlaying = true;
+                updateMessage('Playing audio...', 'info');
+                drawRecordedWaveform(audioBlobToPlay); // Redraw waveform for playback
+                setButtonStates();
+            }
+        }
+
+        // Fetch and Play Existing Audio
+        async function fetchAndPlayExistingAudio() {
+            const pId = patientIdInput.value.trim();
+
+            // Prepare or find a container for the results
+            let audioListContainer = document.getElementById('audioPlaybackContainer');
+            if (!audioListContainer) {
+                audioListContainer = document.createElement('div');
+                audioListContainer.id = 'audioPlaybackContainer';
+                // Place this after the audioPlayer div (or wherever you want)
+                let ref = document.getElementById('audioPlayer');
+                ref.parentNode.insertBefore(audioListContainer, ref.nextSibling);
+            }
+            audioListContainer.innerHTML = ''; // Clear previous
+
+            if (!pId) {
+                updateMessage('Please enter a Speaker ID to fetch audio.', 'error');
+                return;
+            }
+
+            loading = true;
+            setButtonStates();
+            updateMessage('Fetching audio...', 'info');
+
+            try {
+                const response = await fetch(`/getAudio/${encodeURIComponent(pId)}`);
+                const data = await response.json();
+
+                if (response.ok && data.success && Array.isArray(data.audioList) && data.audioList.length > 0) {
+                    updateMessage(`Found ${data.audioList.length} audio file(s) for Speaker ID "${pId}".`, 'success');
+                    audioListContainer.innerHTML = ''; // Clear loading message
+
+                    data.audioList.forEach((audioItem, idx) => {
+                        const div = document.createElement('div');
+                        div.style.marginBottom = '13px';
+
+                        const label = document.createElement('div');
+                        label.textContent = `Audio #${idx + 1} (${new Date(audioItem.recordingDate).toLocaleString()})`;
+                        label.style.fontWeight = 'bold';
+                        label.style.fontSize = '1em';
+                        label.style.marginBottom = '3px';
+
+                        const audio = document.createElement('audio');
+                        audio.controls = true;
+                        audio.style.width = '100%';
+                        audio.src = 'data:audio/wav;base64,' + audioItem.audio;
+
+                        div.appendChild(label);
+                        div.appendChild(audio);
+                        audioListContainer.appendChild(div);
+                    });
+                } else {
+                    audioListContainer.innerHTML = `<div style="color:red; font-weight:500;">No audio found for Speaker ID "${pId}".</div>`;
+                    updateMessage(data.message || `No audio found for Speaker ID "${pId}".`, 'error');
+                }
+            } catch (error) {
+
+                audioListContainer.innerHTML = `<div style="color:red;">Error fetching or displaying audios.</div>`;
+                updateMessage(`Error fetching audio: ${error.message}`, 'error');
+                console.error(error);
+            } finally {
+                loading = false;
+                setButtonStates();
+            }
+        }
+
+        // Event Listeners
+        patientIdInput.addEventListener('input', () => {
+            isPatientValid = false; // Invalidate on ID change
+            updateMessage('', 'info'); // Clear message
+            setButtonStates();
+        });
+        checkPatientIdBtn.addEventListener('click', checkPatientId);
+        // registerPatientBtn's onclick is now directly in HTML for navigation
+        startRecordingBtn.addEventListener('click', startRecording);
+        stopRecordingBtn.addEventListener('click', stopRecording);
+        submitRecordingBtn.addEventListener('click', submitRecording);
+        playRecordedAudioBtn.addEventListener('click', () => playAudio());
+        fetchAndPlayExistingAudioBtn.addEventListener('click', fetchAndPlayExistingAudio);
+
+        // Initial setup on window load
+        window.onload = async () => {
+            await initLiveWaveform(); // Initialize waveform
+            setButtonStates(); // Initial button state setup
+        };
+
+        // Cleanup on page unload (optional, for robustness)
+        window.addEventListener('beforeunload', () => {
+            stopLiveWaveform();
+            if (audioContext && audioContext.state !== 'closed') {
+                audioContext.close();
+                audioContext = null;
+            }
+        });
+
+    </script>
+</body>
+</html>

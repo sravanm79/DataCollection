@@ -18,5 +18,6 @@ RUN chmod +x /wait-for-it.sh
 # Expose the port your app runs on
 EXPOSE 3000
 
-# Run your app (entry point)
+# Default command (not used since overridden by docker-compose)
 CMD ["node", "new_app.js"]
+

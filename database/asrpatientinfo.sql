@@ -1,7 +1,6 @@
 -- phpMyAdmin SQL Dump
 -- version 5.0.2
--- Full database with consent, pointers, and relationships
--- Generation Time: CURRENT
+-- Updated with additional optional fields: height, weight, identification marks, injuries
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -19,47 +18,57 @@ CREATE TABLE `doctor` (
 
 -- Table: patient
 CREATE TABLE `patient` (
-  `patientID` INT NOT NULL AUTO_INCREMENT,
+  `patientID` VARCHAR(50) NOT NULL,
   `patientName` VARCHAR(100) NOT NULL,
   `doctorID` INT NOT NULL,
   `age` INT NOT NULL,
   `maritalStatus` ENUM('Single', 'Married', 'Divorced', 'Widowed') NOT NULL,
-  `education` VARCHAR(100) NOT NULL,
-  `occupation` VARCHAR(100) NOT NULL,
-  `monthlyIncome` INT NOT NULL,
+  `education` VARCHAR(100),
+  `occupation` VARCHAR(100),
+  `monthlyIncome` INT,
+
+  -- New optional fields
+  `height` VARCHAR(10),
+  `weight` VARCHAR(10),
+  `identificationMarks` TEXT,
+  `injuries` TEXT,
+
   PRIMARY KEY (`patientID`),
   FOREIGN KEY (`doctorID`) REFERENCES `doctor`(`doctorID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Table: patientConsent
+-- Table: patientConsent  
 CREATE TABLE `patientConsent` (
-  `patientID` INT NOT NULL,
+  `patientID` VARCHAR(50) NOT NULL,
   `consentGiven` ENUM('Yes', 'No') DEFAULT NULL,
   PRIMARY KEY (`patientID`),
   FOREIGN KEY (`patientID`) REFERENCES `patient`(`patientID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Table: stpointer (e.g., for keeping track of patient processing)
-CREATE TABLE `stpointer` (
-  `currentPointer` INT NOT NULL
+-- Table: patientAudio
+CREATE TABLE `patientAudio` (
+  `audioID` INT NOT NULL AUTO_INCREMENT,
+  `patientID` VARCHAR(50) NOT NULL,
+  `recordingDate` DATETIME NOT NULL,
+  `audioFile` LONGBLOB NOT NULL,
+  PRIMARY KEY (`audioID`),
+  FOREIGN KEY (`patientID`) REFERENCES `patient`(`patientID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Insert dummy pointer
-INSERT INTO `stpointer` (`currentPointer`) VALUES (1);
 
--- Insert dummy doctors
 INSERT INTO `doctor` (`doctorName`) VALUES
 ('Dr. Arjun Rao'),
 ('Dr. Meena Patil');
 
--- Insert dummy patients
-INSERT INTO `patient` (`patientName`, `doctorID`, `age`, `maritalStatus`, `education`, `occupation`, `monthlyIncome`) VALUES
-('Ravi Kumar', 1, 35, 'Married', 'Graduate', 'Engineer', 50000),
-('Anita Desai', 2, 28, 'Single', 'Postgraduate', 'Teacher', 40000);
+INSERT INTO `patient` (
+  `patientID`, `patientName`, `doctorID`, `age`, `maritalStatus`, `education`, `occupation`, `monthlyIncome`,
+  `height`, `weight`, `identificationMarks`, `injuries`
+) VALUES
+('P001', 'Ravi Kumar', 1, 35, 'Married', 'Graduate', 'Engineer', 50000, '170 cm', '70 kg', 'Mole on left cheek', ''),
+('P002', 'Anita Desai', 2, 28, 'Single', 'Postgraduate', 'Teacher', 40000, '160 cm', '55 kg', '', 'Fractured arm (healed)');
 
--- Insert dummy consent
 INSERT INTO `patientConsent` (`patientID`, `consentGiven`) VALUES
-(1, 'Yes'),
-(2, 'No');
+('P001', 'Yes'),
+('P002', 'No');
 
 COMMIT;

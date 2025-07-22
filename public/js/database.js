@@ -12,10 +12,10 @@ const mysql = require('mysql');
 
 function connectWithRetry() {
     const connection = mysql.createConnection({
-        host: 'db',               // Docker service name
-        user: 'root',
-        password: 'yourpassword', // Use same as in docker-compose.yml
-        database: 'hospitaldb'    // Match with your .sql file
+     host: process.env.MYSQL_HOST || 'db',
+    user: process.env.MYSQL_USER || 'root',
+    password: process.env.MYSQL_PASSWORD || 'mypassword',
+    database: process.env.MYSQL_DATABASE || 'hospitaldb'
     });
 
     connection.connect(err => {
