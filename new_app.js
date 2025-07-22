@@ -44,6 +44,8 @@
     app.use(cookieParser());
     app.use(express.static(path.join(__dirname, 'public')));
 
+    const cors = require('cors'); // ← add this near the top
+    app.use(cors()); // Allow all origins (for testing only — safer to limit in production)
 
     // Import the database connectivity file
     var mydb = require('./public/js/database'); // Ensure this file correctly exports a mysql connection

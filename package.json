@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "swapnil, venkata",
+  "author": "Sravan",
   "license": "ISC",
   "dependencies": {
     "-": "^0.0.1",
@@ -33,6 +33,7 @@
     "socket.io": "^4.4.0",
     "strip-bom-stream": "^5.0.0",
     "window": "^4.2.7",
-     "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "cors": "^2.8.5"
   }
 }
