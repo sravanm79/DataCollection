@@ -30,6 +30,7 @@ services:
       MYSQL_DATABASE: hospitaldb
     ports:
       - "3306:3306"
+    command: --max_allowed_packet=734003200  # 700 MB = 700 * 1024 * 1024 bytes
     volumes:
       - db_data:/var/lib/mysql
       - ./database/asrpatientinfo.sql:/docker-entrypoint-initdb.d/init.sql

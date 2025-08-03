@@ -7,190 +7,12 @@
   <link rel="stylesheet" href="./css/consent.css">
   <link rel="stylesheet" href="./css/index.css">
   <link rel="stylesheet" href="./css/footer.css">
-  <link rel="stylesheet" type="text/css" href="./css/record.css">
   <link rel="stylesheet" type="text/css" href="./css/carousel.css">
 
   <script src="./js/jquery.js"></script>
   <script type="text/javascript" src="./js/dateTime.js"></script>
   <script type="text/javascript" src="./js/wavesurfer-5.2.0.js"></script>
   <script type="text/javascript" src="./js/wavesurfer-timeline.js"></script>
-
-  <style>
-    /*
-    These are the ONLY styles added/modified specifically for centering and layout.
-    Avoid conflicts with your external CSS files.
-    */
-    body {
-        display: flex;
-        flex-direction: column; /* Makes body a flex container, stacking children vertically */
-        min-height: 100vh; /* Ensures body takes at least full viewport height */
-        margin: 0; /* Remove default body margin */
-        padding: 0; /* Remove default body padding */
-    }
-
-    /* The new wrapper for main content to center it and control its width */
-    .main-content-wrapper {
-        max-width: 100%; /* Adjust this percentage for desired width */
-        padding: 20px 0; /* Add vertical padding, no horizontal as max-width handles it */
-        box-sizing: border-box;
-        flex-grow: 1; /* Allows the main content to push the footer/copyright to the bottom */
-    }
-
-    /* Ensure footer and copyright don't have conflicting margins/widths */
-    .footer {
-        width: 100%; /* Ensure footer spans full width */
-        margin-top: auto; /* Pushes the footer to the bottom if content is short */
-    }
-
-    .copyright {
-        width: 100%; /* Ensure copyright section spans full width */
-        padding: 10px 0; /* Add some padding */
-        text-align: center; /* Center the text inside */
-        background-color: #222; /* Example background if not already styled */
-        color: #aaa; /* Example text color if not already styled */
-        font-size: 0.9em; /* Example font size */
-    }
-
-    /* Styles that might be in your external CSS but are crucial for inner alignment */
-    .conTitle, .inputCount, .accessCamera, .recIcon, #submitConsentForm {
-        text-align: center; /* Center contents of these blocks */
-    }
-    .videoStream {
-        display: block; /* Important for margin: auto to work */
-        margin: 0 auto; /* Centers the video element */
-        max-width: 640px; /* Limits video size if too wide */
-        width: 100%; /* Makes video responsive within its container */
-        height: auto; /* Maintains aspect ratio */
-    }
-
-    /* Hide the native audio player controls */
-    .consentPreAudio audio {
-        display: none;
-    }
-    /* Consent form container styling */
-#submitConsentForm {
-    text-align: center;
-    margin-top: 25px;
-    padding: 25px;
-    background: linear-gradient(145deg, #f8f9fa, #e9ecef);
-    border-radius: 12px;
-    border: 1px solid #dee2e6;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Base button styling */
-#finalAgreeBtn, #finalDisagreeBtn {
-    display: inline-block;
-    font-size: 1.1rem;
-    font-weight: 600;
-    padding: 14px 28px;
-    margin: 0 12px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    min-width: 180px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    position: relative;
-    overflow: hidden;
-}
-
-/* Confirm button (green) */
-#finalAgreeBtn {
-    background: linear-gradient(145deg, #28a745, #20c997);
-    color: white;
-    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
-}
-
-#finalAgreeBtn:hover {
-    background: linear-gradient(145deg, #218838, #1e7e34);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(40, 167, 69, 0.4);
-}
-
-#finalAgreeBtn:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
-}
-
-/* Cancel button (red) */
-#finalDisagreeBtn {
-    background: linear-gradient(145deg, #dc3545, #e74c3c);
-    color: white;
-    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
-}
-
-#finalDisagreeBtn:hover {
-    background: linear-gradient(145deg, #c82333, #bd2130);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(220, 53, 69, 0.4);
-}
-
-#finalDisagreeBtn:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
-}
-
-/* Disabled state for both buttons */
-#finalAgreeBtn:disabled, #finalDisagreeBtn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none !important;
-    box-shadow: none !important;
-    background: #6c757d !important;
-}
-
-#finalAgreeBtn:disabled:hover, #finalDisagreeBtn:disabled:hover {
-    transform: none;
-    box-shadow: none;
-    background: #6c757d;
-}
-
-/* Button ripple effect */
-#finalAgreeBtn:before, #finalDisagreeBtn:before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
-    transform: translate(-50%, -50%);
-    transition: width 0.3s, height 0.3s;
-}
-
-#finalAgreeBtn:active:before, #finalDisagreeBtn:active:before {
-    width: 300px;
-    height: 300px;
-}
-
-/* Responsive design for mobile devices */
-@media (max-width: 768px) {
-    #finalAgreeBtn, #finalDisagreeBtn {
-        display: block;
-        width: 90%;
-        margin: 10px auto;
-        min-width: auto;
-        font-size: 1rem;
-        padding: 12px 20px;
-    }
-    
-    #submitConsentForm {
-        padding: 20px 15px;
-        margin-top: 20px;
-    }
-}
-
-/* Focus accessibility */
-#finalAgreeBtn:focus, #finalDisagreeBtn:focus {
-    outline: 3px solid rgba(0, 123, 255, 0.5);
-    outline-offset: 2px;
-}
-
-
-  </style>
 </head>
 <body>
   <header class="header">
@@ -204,7 +26,6 @@
     <a href="consent">Consent Form</a>
     <a href="recordData">Record Data</a>
     <a href="contactus">Contact us</a>
-    <!-- <a href="configure">Settings</a> -->
   </nav>
 
   <div class="main-content-wrapper" style="display:flex; justify-content:center; align-items:center;">
@@ -227,8 +48,6 @@
       <section id="consentSection">
         <article class="consentContainer">
           <div class="consentText" style="text-align: justify; margin: 20px;">
-
-
             <h3>CONFIDENTIALITY</h3>
             <p>
               The information collected from you will be maintained with strict confidentiality. Only investigators who are part of this study will have access to the study records. The data collected from this study will be reported in general terms and will not involve any identity names. All data will be kept confidential. Participant data will be kept confidential except in cases where the researcher is legally obligated to report specific incidents. These include, but may not be limited to, incidents of abuse and suicide risk.
@@ -252,15 +71,8 @@
               </audio>
           </div>
           <div class="recIcon" style="display: none;">
-              <p name="recordingImg" class="recordingImg" id="recordingImg">RECORDING...</p>
-              <p name="stoppedRec" class="stoppedRec" id="stoppedRec">STOPPED.</p>
-          </div>
-          <div class="accessCamera" style="display: none;">
-              <video class="videoStream" name="videoStream" autoplay="true" id="videoStream" muted></video>
-              <div class="recordingControls">
-                  <button class="startVid" id="startVid" hidden>Start Recording</button>
-                  <button class="stopVid" id="stopVid" hidden>Stop Recording</button>
-              </div>
+              <p name="recordingImg" class="recordingImg" id="recordingImg">Playing..</p>
+              <p name="stoppedRec" class="stoppedRec" id="stoppedRec">STOP.</p>
           </div>
 
           <form id="submitConsentForm" style="margin-top: 20px; display: none;">
@@ -272,7 +84,9 @@
         </article>
       </section>
     </main>
-  </div> <footer class="footer">
+  </div>
+
+  <footer class="footer">
     <aside class="footcol">
       <h3>About Us</h3>
       <p>IIIT, Dharwad</p>
@@ -294,272 +108,6 @@
   <section class="copyright" align="Center">
     <i><b>All rights are reserved to IIIT Dharwad</b></i>
   </section>
-
-  <script>
-    // Variables for media recording
-    let mediaRecorder;
-    let chunks = [];
-    let videoStream; // To hold the media stream object
-    let recordedPatientID = ''; // Store the patient ID after successful check
-
-    // Get elements
-    const patientIDInput = document.getElementById('patientID');
-    const checkPatientForm = document.getElementById('checkPatientForm');
-    const consentSection = document.getElementById('consentSection'); // The entire section containing text and video
-    const consentPatientIDHidden = document.getElementById('consentPatientID');
-    const videoElement = document.getElementById('videoStream');
-    const cpaAudio = document.getElementById('CPAudio');
-    const recordingImg = document.getElementById('recordingImg');
-    const stoppedRec = document.getElementById('stoppedRec');
-    const finalAgreeBtn = document.getElementById('finalAgreeBtn');
-    const finalDisagreeBtn = document.getElementById('finalDisagreeBtn');
-    const consentPreAudioDiv = document.querySelector('.consentPreAudio');
-    const recIconDiv = document.querySelector('.recIcon');
-    const accessCameraDiv = document.querySelector('.accessCamera');
-    const submitConsentFormDiv = document.getElementById('submitConsentForm');
-
-
-    // --- 1. Initial Setup: Access Camera/Mic and MediaRecorder Setup ---
-    // This part runs once when the page loads to set up camera access and recorder.
-    navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true
-    }).then(function(stream) {
-        videoStream = stream; // Store the stream object
-        videoElement.srcObject = stream; // Display the live camera feed
-        mediaRecorder = new MediaRecorder(stream);
-
-        mediaRecorder.ondataavailable = function(event) {
-            chunks.push(event.data);
-        };
-
-        mediaRecorder.onstop = async function() {
-            const blob = new Blob(chunks, {
-                type: 'video/mp4; codecs=h264' // Ensure correct type for AV
-            });
-            chunks = []; // Clear chunks for next recording
-
-            const dateTime = getDateTime(); // From dateTime.js (Assuming it's available)
-            // Current timestamp: 20250717163034
-            const fileName = `${dateTime}_${recordedPatientID}_Psych_Consent.mp4`; // Naming convention
-
-            const formData = new FormData();
-            formData.append('recordedConsent', blob, fileName);
-            formData.append('patientID', recordedPatientID); // Include patient ID
-
-            // --- Server-Side Endpoint Requirement ---
-            // You MUST have a server endpoint '/uploadConsentAV' to handle this file upload.
-            // try {
-            //     const uploadResponse = await fetch('/uploadConsentAV', {
-            //         method: 'POST',
-            //         body: formData,
-            //     });
-
-            //     if (uploadResponse.ok) {
-            //         const result = await uploadResponse.json();
-            //         console.log('Video consent uploaded successfully:', result);
-
-            //         // After successful AV upload, update the text consent status via the existing API
-            //         await fetch('/submitConsent', {
-            //             method: 'POST',
-            //             headers: { 'Content-Type': 'application/json' },
-            //             body: JSON.stringify({ patientID: recordedPatientID, consentGiven: 'Yes' })
-            //         });
-            //         alert('Audio-Visual Consent Recorded and Status Updated to YES.');
-            //         // After successful recording and upload, disable buttons and potentially hide recording elements
-            //         finalAgreeBtn.disabled = true;
-            //         finalDisagreeBtn.disabled = true;
-            //         // Optional: Hide recording elements if you want a clean state after recording
-            //         // consentPreAudioDiv.style.display = 'none';
-            //         // recIconDiv.style.display = 'none';
-            //         // accessCameraDiv.style.display = 'none';
-            //         // submitConsentFormDiv.style.display = 'none';
-            //         // checkPatientForm.style.display = ''; // Show patient ID form again for new entry
-            //         // patientIDInput.value = ''; // Clear patient ID input
-            //     } else {
-            //         console.error('Failed to upload video consent:', uploadResponse.statusText);
-            //         alert('Error uploading consent video. Please try again.');
-            //         finalAgreeBtn.disabled = false; // Re-enable if user needs to retry or cancel
-            //         finalDisagreeBtn.disabled = false;
-            //     }
-            // } catch (error) {
-            //     console.error('Network error during video upload:', error);
-            //     alert('Network error. Could not upload consent video.');
-            //     finalAgreeBtn.disabled = false;
-            //     finalDisagreeBtn.disabled = false;
-            // }
-
-            recordingImg.style.display = 'none';
-            stoppedRec.style.display = 'inline'; // Show "STOPPED."
-            finalAgreeBtn.disabled = false;
-            finalDisagreeBtn.disabled = false;
-            alert('Recording complete. Please confirm or cancel.');
-        };
-
-    }).catch(function(err) {
-        console.error("Error accessing camera and microphone: ", err);
-        alert("Please allow camera and microphone access to proceed with consent recording.");
-        // If camera/mic access is denied, prevent the consent flow from starting
-        checkPatientForm.querySelector('input[type="submit"]').disabled = true;
-        checkPatientForm.querySelector('input[type="submit"]').value = 'Camera/Mic Access Denied';
-    });
-
-    // --- 2. Patient ID Verification (Triggers Recording) ---
-    document.getElementById('checkPatientForm').addEventListener('submit', async e => {
-        e.preventDefault();
-        recordedPatientID = patientIDInput.value.trim(); // Store ID
-        if (!recordedPatientID) {
-            alert('Please enter a Patient ID.');
-            return;
-        }
-
-        // Before sending to server, ensure mediaRecorder is ready
-        if (!mediaRecorder) {
-            alert("Camera/microphone access not granted or not ready. Please allow permissions.");
-            return;
-        }
-
-        const resp = await fetch('/checkPatient', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ patientID: recordedPatientID })
-        });
-        const json = await resp.json();
-
-        if (json.success) {
-            // Patient ID is valid, now start the recording process
-            consentPatientIDHidden.value = recordedPatientID; // Set hidden ID field
-
-            // Make recording elements visible
-            consentPreAudioDiv.style.display = '';
-            recIconDiv.style.display = '';
-            accessCameraDiv.style.display = '';
-            submitConsentFormDiv.style.display = ''; // Show final action buttons
-
-            // Temporarily hide the patient ID input form
-            checkPatientForm.style.display = 'none';
-
-            // Start the timed recording process
-            initiateConsentRecording();
-
-        } else {
-            alert('Patient not found.');
-            patientIDInput.value = ''; // Clear input if not found
-        }
-    });
-
-    // --- 3. Timed Audio-Visual Consent Recording Logic ---
-    async function initiateConsentRecording() {
-        if (!mediaRecorder || mediaRecorder.state === 'recording') {
-            console.log("Media recorder not ready or already recording.");
-            return;
-        }
-
-        // Disable final action buttons while recording is in progress
-        finalAgreeBtn.disabled = true;
-        finalDisagreeBtn.disabled = true;
-
-        // Sequence of events: Beep -> Start Recording -> Play Consent Audio -> Beep -> Stop Recording
-        // Times from your old script (2s, 49s, 55s relative to start of process)
-
-        // 1. First Beep (after 2 seconds)
-        setTimeout(() => {
-            new Audio('./sounds/beep.wav').play();
-        }, 2000);
-
-        // 2. Start Recording (at 2 seconds)
-        setTimeout(() => {
-            if (mediaRecorder.state === 'inactive') {
-                mediaRecorder.start();
-                recordingImg.style.display = 'inline';
-                stoppedRec.style.display = 'none';
-                console.log('Recording started...');
-            }
-        }, 2000);
-
-        // 3. Play Consent Audio (at 2 seconds)
-        setTimeout(() => {
-            cpaAudio.play();
-        }, 2000);
-
-        // 4. Second Beep (at 49 seconds from start)
-        setTimeout(() => {
-            new Audio('./sounds/beep.wav').play();
-        }, 49000);
-
-        // 5. Stop Recording (at 55 seconds from start)
-        setTimeout(() => {
-            if (mediaRecorder.state === 'recording') {
-                mediaRecorder.stop();
-                console.log('Recording stopped...');
-                // The onstop event listener will handle the upload and 'YES' status update.
-                // After recording stops, enable the final action buttons.
-                finalAgreeBtn.disabled = false;
-                finalDisagreeBtn.disabled = false;
-                alert('Recording complete. Please confirm or cancel.');
-            }
-        }, 55000);
-    }
-
-    // --- 4. Final Confirmation/Cancellation after Recording ---
-    document.getElementById('submitConsentForm').addEventListener('submit', async e => {
-        e.preventDefault();
-
-        try {
-            const response = await fetch('/submitConsent', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    patientID: recordedPatientID,
-                    consentGiven: 'Yes'
-                })
-            });
-
-            if (!response.ok) throw new Error("Network/database error");
-
-            alert('Consent process finalized. Thank you!');
-        } catch(err) {
-            alert("Could not update consent status in database. Please try again.");
-            return; 
-        }
-
-        consentPreAudioDiv.style.display = 'none';
-        recIconDiv.style.display = 'none';
-        accessCameraDiv.style.display = 'none';
-        submitConsentFormDiv.style.display = 'none';
-
-        checkPatientForm.style.display = ''; 
-        patientIDInput.value = '';
-        finalAgreeBtn.disabled = true;
-        finalDisagreeBtn.disabled = true;
-    });
-
-    document.getElementById('finalDisagreeBtn').addEventListener('click', async () => {
-        if (mediaRecorder && mediaRecorder.state === 'recording') {
-            mediaRecorder.stop(); // Stop recording if still active
-            // chunks will be cleared by onstop, but no upload will happen if this button implies cancellation.
-        }
-        // Force status update to 'No'
-        await fetch('/submitConsent', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ patientID: recordedPatientID, consentGiven: 'No' })
-        });
-        alert('Consent recording cancelled. Status updated as NO.');
-        // Reset the UI for a new entry
-        consentPreAudioDiv.style.display = 'none';
-        recIconDiv.style.display = 'none';
-        accessCameraDiv.style.display = 'none';
-        submitConsentFormDiv.style.display = 'none';
-
-        checkPatientForm.style.display = ''; // Show patient ID form again
-        patientIDInput.value = ''; // Clear patient ID
-        recordingImg.style.display = 'none';
-        stoppedRec.style.display = 'none';
-        finalAgreeBtn.disabled = true;
-        finalDisagreeBtn.disabled = true;
-    });
-  </script>
+  <script src="../js/consent.js"></script>
 </body>
 </html>
-

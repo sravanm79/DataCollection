@@ -1,63 +1,173 @@
-.conTitle
-{
-	text-align: center;
+
+    /*
+    These are the ONLY styles added/modified specifically for centering and layout.
+    Avoid conflicts with your external CSS files.
+    */
+    body {
+        display: flex;
+        flex-direction: column; /* Makes body a flex container, stacking children vertically */
+        min-height: 100vh; /* Ensures body takes at least full viewport height */
+        margin: 0; /* Remove default body margin */
+        padding: 0; /* Remove default body padding */
+    }
+
+    /* The new wrapper for main content to center it and control its width */
+    .main-content-wrapper {
+        max-width: 100%; /* Adjust this percentage for desired width */
+        padding: 20px 0; /* Add vertical padding, no horizontal as max-width handles it */
+        box-sizing: border-box;
+        flex-grow: 1; /* Allows the main content to push the footer/copyright to the bottom */
+    }
+
+    /* Ensure footer and copyright don't have conflicting margins/widths */
+    .footer {
+        width: 100%; /* Ensure footer spans full width */
+        margin-top: auto; /* Pushes the footer to the bottom if content is short */
+    }
+
+    .copyright {
+        width: 100%; /* Ensure copyright section spans full width */
+        padding: 10px 0; /* Add some padding */
+        text-align: center; /* Center the text inside */
+        background-color: #222; /* Example background if not already styled */
+        color: #aaa; /* Example text color if not already styled */
+        font-size: 0.9em; /* Example font size */
+    }
+
+    /* Styles that might be in your external CSS but are crucial for inner alignment */
+    .conTitle, .inputCount, .accessCamera, .recIcon, #submitConsentForm {
+        text-align: center; /* Center contents of these blocks */
+    }
+    .videoStream {
+        display: block; /* Important for margin: auto to work */
+        margin: 0 auto; /* Centers the video element */
+        max-width: 640px; /* Limits video size if too wide */
+        width: 100%; /* Makes video responsive within its container */
+        height: auto; /* Maintains aspect ratio */
+    }
+
+    /* Hide the native audio player controls */
+    .consentPreAudio audio {
+        display: none;
+    }
+    /* Consent form container styling */
+#submitConsentForm {
+    text-align: center;
+    margin-top: 25px;
+    padding: 25px;
+    background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+    border-radius: 12px;
+    border: 1px solid #dee2e6;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.consentContainer
-{
-	display: table;
-	width: 100%;
-}
-.consentKA
-{
-	border: solid 1px;
-	background-color: white;
-	font-family: cambria;
-	font-size: 0.7em;
-	display: table-cell; 
-}
-
-.consentEN
-{
-	border: solid 1px;
-	background-color: white;
-	font-size: 1em;
-	font-weight: bold;
-	display: table-cell;
-	width: 50%;
+/* Base button styling */
+#finalAgreeBtn, #finalDisagreeBtn {
+    display: inline-block;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 14px 28px;
+    margin: 0 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 180px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
 }
 
-.recIcon
-{
-	width: 100%;
-	text-align: center;
-}
-.recordingImg
-{
-	width: 6%;
-	height: 6%;
+/* Confirm button (green) */
+#finalAgreeBtn {
+    background: linear-gradient(145deg, #28a745, #20c997);
+    color: white;
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
 }
 
-.stoppedRec
-{
-	width: 6%;
-	height: 6%;
+#finalAgreeBtn:hover {
+    background: linear-gradient(145deg, #218838, #1e7e34);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(40, 167, 69, 0.4);
 }
 
-.consentPreAudio
-{
-	width: 100%;
+#finalAgreeBtn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
 }
 
-audio
-{
-	margin-left: 25%;
-	margin-right: 25%;
-	width: 50%;
+/* Cancel button (red) */
+#finalDisagreeBtn {
+    background: linear-gradient(145deg, #dc3545, #e74c3c);
+    color: white;
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
 }
 
-.videoStream
-{
-	height: 240px;
-	width: 320px;
+#finalDisagreeBtn:hover {
+    background: linear-gradient(145deg, #c82333, #bd2130);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(220, 53, 69, 0.4);
+}
+
+#finalDisagreeBtn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
+}
+
+/* Disabled state for both buttons */
+#finalAgreeBtn:disabled, #finalDisagreeBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+    background: #6c757d !important;
+}
+
+#finalAgreeBtn:disabled:hover, #finalDisagreeBtn:disabled:hover {
+    transform: none;
+    box-shadow: none;
+    background: #6c757d;
+}
+
+/* Button ripple effect */
+#finalAgreeBtn:before, #finalDisagreeBtn:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s;
+}
+
+#finalAgreeBtn:active:before, #finalDisagreeBtn:active:before {
+    width: 300px;
+    height: 300px;
+}
+
+/* Responsive design for mobile devices */
+@media (max-width: 768px) {
+    #finalAgreeBtn, #finalDisagreeBtn {
+        display: block;
+        width: 90%;
+        margin: 10px auto;
+        min-width: auto;
+        font-size: 1rem;
+        padding: 12px 20px;
+    }
+    
+    #submitConsentForm {
+        padding: 20px 15px;
+        margin-top: 20px;
+    }
+}
+
+/* Focus accessibility */
+#finalAgreeBtn:focus, #finalDisagreeBtn:focus {
+    outline: 3px solid rgba(0, 123, 255, 0.5);
+    outline-offset: 2px;
 }

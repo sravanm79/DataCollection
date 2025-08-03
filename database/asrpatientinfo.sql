@@ -41,6 +41,7 @@ CREATE TABLE `patient` (
 CREATE TABLE `patientConsent` (
   `patientID` VARCHAR(50) NOT NULL,
   `consentGiven` ENUM('Yes', 'No') DEFAULT NULL,
+  `consentAudio` LONGBLOB DEFAULT NULL,
   PRIMARY KEY (`patientID`),
   FOREIGN KEY (`patientID`) REFERENCES `patient`(`patientID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -57,8 +58,31 @@ CREATE TABLE `patientAudio` (
 
 
 INSERT INTO `doctor` (`doctorName`) VALUES
-('Dr. Arjun Rao'),
-('Dr. Meena Patil');
+('Dr. Ranganath Kulkarni'),
+('Dr. Raghavendra B-nayak'),
+('Dr. Srinivas Kosgi'),
+('Dr. Manjunath Bajantri'),
+('Dr. Aditya Pandurangi'),
+('Dr. Mahesh M.'),
+('Dr. Meghamala Tavargi'),
+('Dr. Swapna Aditya Pandurangi'),
+('Dr. Tejaswi T P'),
+('Dr. Ambika Kabade'),
+('Dr. Raghavendra Patil'),
+('Dr. Aishwarya Jog'),
+('Dr. Meghana H'),
+('Dr. Roopa S Patil'),
+('Dr. Madhu Koli'),
+('Dr. Sudheendra Huddar'),
+('Dr. Ruturaj Kulkarni'),
+('Dr. Roshni R'),
+('Dr. Ume Hani'),
+('Dr. Pratibha H.N.'),
+('Dr. Sahana S Murthy'),
+('Dr. Tanvi Desai'),
+('Dr. Pavankumar V'),
+('Dr. Pavansing Tiwari');
+
 
 INSERT INTO `patient` (
   `patientID`, `patientName`, `doctorID`, `age`, `maritalStatus`, `education`, `occupation`, `monthlyIncome`,

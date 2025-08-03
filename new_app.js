@@ -727,3 +727,33 @@ app.get('/getPatientDetails/:patientID', async (req, res) => {
         });
     }
 });
+
+// Consent.js - Handle consent recording and submission
+app.post('/uploadConsentAudio', upload.single('consentAudio'), async (req, res) => {
+  try {
+    const patientID = req.body.patientID;
+    const audioBuffer = req.file?.buffer;
+    console.log('Received file:', req.file?.originalname, 'for patientID:', req.body?.patientID);
+    if (!patientID || !audioBuffer) {
+      return res.status(400).json({ success: false, message: 'Missing patientID or audio file' });
+    }
+
+    // Save the audio buffer into the patientConsent table
+    await new Promise((resolve, reject) => {
+      mydb.query(
+        `INSERT INTO patientConsent (patientID, consentAudio)
+         VALUES (?, ?)
+         ON DUPLICATE KEY UPDATE consentAudio = VALUES(consentAudio)`,
+        [patientID, audioBuffer],
+        (err, result) => (err ? reject(err) : resolve(result))
+      );
+    });
+
+    res.status(200).json({ success: true, message: 'Consent audio uploaded successfully' });
+  } catch (err) {
+    console.error("DB update error:", err);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+
