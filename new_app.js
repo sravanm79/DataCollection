@@ -1,6 +1,6 @@
     /*
     * This script has been generated for the project titled
-    * "Voice Data Collection for Psychiatric Evaluation and Research"
+    * "Digital Voice Recording - NAIN 2.0"
     * The original author of the script is
     * Swapnil S Sontakke, Project Associate, IIIT, Dharwad
     * Year: January, 2022
