@@ -12,46 +12,6 @@
 
     <script type="text/javascript" src="./js/stickyNav.js"></script>
     <script type="text/javascript" src="./js/jquery.js"></script>
-    <style type="text/css">
-        .aboutus {
-            margin: 50px 50px 20px 50px;
-            text-align: justify;
-            text-justify: inter-word;
-        }
-        .stickyNav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-        }
-        .trow textarea {
-            width: 100%;
-            box-sizing: border-box;
-            min-height: 60px;
-            resize: vertical;
-            font-size: 1em;
-            padding: 8px;
-        }
-        .initial-form {
-            display: block;
-        }
-        .expanded-form {
-            display: none;
-        }
-        .error-message {
-            color: red;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-        .success-message {
-            color: green;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-        .loading {
-            color: blue;
-            font-style: italic;
-        }
-    </style>
 </head>
 <body>
     <header class="header">
@@ -97,12 +57,9 @@
                         </div>
 
                         <div class="trow">
-                            <label for="initialDoctor">Assigned Doctor: </label>
-                            <select name="initialDoctor" id="initialDoctor" required>
-                                <option disabled selected value> -- Select Doctor -- </option>
-                                <option value="1">Dr. Arjun Rao</option>
-                                <option value="2">Dr. Meena Patil</option>
-                            </select>
+                            <label for="initialDoctor">Assigned Doctor:</label>
+                            <input list="initialDoctorList" id="initialDoctorInput" name="initialDoctor" placeholder="Type doctor's name" required>
+                            <datalist id="initialDoctorList"></datalist>
                         </div>
 
                         <div class="trow">
@@ -208,15 +165,11 @@
                             <label for="injuries">Injuries (if any):</label>
                             <textarea name="injuries" id="injuries" placeholder="Mention any injuries in detail..."></textarea>
                         </div>
-
-                        <div class="trow">
-                            <label for="doctorID">Assigned Doctor: </label>
-                            <select name="doctorID" id="doctorID" required>
-                                <option disabled selected value> -- Select Doctor -- </option>
-                                <option value="1">Dr. Arjun Rao</option>
-                                <option value="2">Dr. Meena Patil</option>
-                            </select>
-                        </div>
+                    <div class="trow">
+                        <label for="initialDoctor">Assigned Doctor:</label>
+                        <input list="doctorList" id="initialDoctorInput" name="initialDoctor" placeholder="Type doctor's name" required>
+                        <datalist id="doctorList"></datalist>
+                    </div>
 
                         <div class="trow">
                             <label for="consentType">Consent Type to be given:</label>
@@ -275,187 +228,6 @@
         </section>
     </footer>
 
-    <script type="text/javascript">
-        // Global variables
-        let currentMode = 'initial'; // 'initial', 'fresh', 'old'
-        
-        // Helper functions
-        function showMessage(elementId, message, type = 'info') {
-            const messageArea = document.getElementById(elementId);
-            messageArea.innerHTML = `<div class="${type}-message">${message}</div>`;
-        }
-        
-        function clearMessage(elementId) {
-            document.getElementById(elementId).innerHTML = '';
-        }
-        
-        function showInitialForm() {
-            document.getElementById('initialFormSection').style.display = 'block';
-            document.getElementById('expandedFormSection').style.display = 'none';
-            currentMode = 'initial';
-            clearMessage('messageArea');
-            clearMessage('expandedMessageArea');
-        }
-        
-        function showExpandedForm(mode, errorMsg = null) {
-            document.getElementById('initialFormSection').style.display = 'none';
-            document.getElementById('expandedFormSection').style.display = 'block';
-            currentMode = mode;
-            
-            // Copy basic info to expanded form
-            document.getElementById('username').value = document.getElementById('initialName').value;
-            document.getElementById('patientID').value = document.getElementById('initialPatientID').value;
-            document.getElementById('doctorID').value = document.getElementById('initialDoctor').value;
-            
-            if (errorMsg) {
-                showMessage('expandedMessageArea', errorMsg, 'error');
-            } else {
-                clearMessage('expandedMessageArea');
-            }
-        }
-        
-        // Initial form submission handler
-document.getElementById('initialForm').addEventListener('submit', async function (e) {
-    e.preventDefault();
-
-    // Collect values
-    const name = document.getElementById('initialName').value.trim();
-    const patientID = document.getElementById('initialPatientID').value.trim();
-    const doctorID = document.getElementById('initialDoctor').value;
-    const opdType = document.getElementById('opdType').value;
-
-    // Validate basic fields
-    if (!name || !patientID || !doctorID || !opdType) {
-        showMessage('messageArea', 'Please fill all required fields.', 'error');
-        return;
-    }
-
-    // FRESH: Show expanded form
-    if (opdType === 'fresh') {
-        showExpandedForm('fresh');
-        return;
-    }
-
-    // OLD: Check existing in DB
-    if (opdType === 'old') {
-        showMessage('messageArea', 'Checking patient details...', 'loading');
-        try {
-            console.log("Fetching patient...");
-            const response = await fetch('/checkExistingPatient', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ patientID })
-            });
-            console.log("Got response for check:", response);
-            const result = await response.json();
-            console.log("Result of checkExistingPatient:", result);
-
-            if (response.ok && result.success) {
-                console.log("Patient exists, updating...");
-                const updateResp = await fetch('/updateExistingPatient', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        patientID,
-                        patientName: name,
-                        doctorID
-                    })
-                });
-                console.log("Got response for update:", updateResp);
-                // THE FOLLOWING LINE IS MOST LIKELY FAILING!
-                const updateJson = await updateResp.json();
-                console.log("Update response json:", updateJson);
-
-                if (updateResp.ok && updateJson.success) {
-                    showMessage('messageArea', '', '');
-                    document.getElementById('popupTitle').textContent = 'Patient Updated!';
-                    document.getElementById('displayPatientId').textContent = patientID;
-                    document.getElementById('popupTitle').textContent = 'Patient Updated!';
-
-                    document.getElementById('patientIdPopup').style.display = 'block';
-                    return;
-                } else {
-                    showMessage('messageArea', updateJson.message || 'Failed to update patient information.', 'error');
-                    return;
-                }
-            } else {
-                showExpandedForm('old', `No patient found with ID "${patientID}". Please fill the complete registration form.`);
-                return;
-            }
-        } catch (err) {
-            console.error("ERROR in OLD OPD handler:", err);
-            showMessage('messageArea', 'Error checking patient details. Please try again.', 'error');
-        }
-    }
-});
-
-
-
-
-       // Expanded form submission handler
-        document.getElementById('expandedForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(this);
-            const data = {};
-            formData.forEach((value, key) => { 
-                data[key] = value; 
-            });
-            
-            showMessage('expandedMessageArea', 'Processing registration...', 'loading');
-            
-            try {
-                const endpoint = currentMode === 'fresh' ? '/registerFreshPatient' : '/registerOldPatient';
-                const response = await fetch(endpoint, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-                
-                const result = await response.json();
-                
-		if (response.ok && result.success) {
-			const popupTitle = document.getElementById('popupTitle');
-			const popupMessage = document.getElementById('popupMessage');
-			const displayPatientId = document.getElementById('displayPatientId');
-
-			if (popupTitle) popupTitle.textContent = 'Registration Successful!';
-			if (popupMessage) popupMessage.textContent = 'Patient registered successfully.';
-			if (displayPatientId) displayPatientId.textContent = result.patientID;
-
-			document.getElementById('patientIdPopup').style.display = 'block';
-		}
- 		else {
-                    showMessage('expandedMessageArea', result.message || 'Registration failed. Please try again.', 'error');
-                }
-            } catch (error) {
-                console.error('Error registering patient:', error);
-                showMessage('expandedMessageArea', 'Error during registration. Please try again.', 'error');
-            }
-        });
-        
-        // Back button handler
-        document.getElementById('backBtn').addEventListener('click', function() {
-            showInitialForm();
-            // Reset initial form
-            document.getElementById('initialForm').reset();
-        });
-        
-        // Popup close handler
-        document.getElementById('closePopup').addEventListener('click', function() {
-            document.getElementById('patientIdPopup').style.display = 'none';
-            // Reset forms and go back to initial
-            document.getElementById('initialForm').reset();
-            document.getElementById('expandedForm').reset();
-            showInitialForm();
-        });
-        
-        // Initialize page
-        document.addEventListener('DOMContentLoaded', function() {
-            showInitialForm();
-        });
-    </script>
+<script src="../js/userDetails.js"></script>
 </body>
 </html>

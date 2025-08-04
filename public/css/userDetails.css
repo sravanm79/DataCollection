@@ -104,3 +104,41 @@ select {
 .subButton:hover {
     background-color: #45a049; /* Darker green on hover */
 }
+.aboutus {
+margin: 50px 50px 20px 50px;
+text-align: justify;
+text-justify: inter-word;
+}
+.stickyNav {
+position: fixed;
+top: 0;
+width: 100%;
+}
+.trow textarea {
+width: 100%;
+box-sizing: border-box;
+min-height: 60px;
+resize: vertical;
+font-size: 1em;
+padding: 8px;
+}
+.initial-form {
+display: block;
+}
+.expanded-form {
+display: none;
+}
+.error-message {
+color: red;
+font-weight: bold;
+margin: 10px 0;
+}
+.success-message {
+color: green;
+font-weight: bold;
+margin: 10px 0;
+}
+.loading {
+color: blue;
+font-style: italic;
+}

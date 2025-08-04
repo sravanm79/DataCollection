@@ -466,7 +466,7 @@ app.get('/getAudio/:patientId', (req, res) => {
 app.post('/updateExistingPatient', async (req, res) => {
     try {
         const { patientID, patientName, doctorID } = req.body;
-        
+
         if (!patientID || !patientName || !doctorID) {
             return res.status(400).json({ 
                 success: false, 
@@ -474,7 +474,6 @@ app.post('/updateExistingPatient', async (req, res) => {
             });
         }
 
-        // Update patient's name and doctor
         const updateQuery = 'UPDATE patient SET patientName = ?, doctorID = ? WHERE patientID = ?';
         
         mydb.query(updateQuery, [patientName, doctorID, patientID], (err, result) => {
@@ -485,7 +484,7 @@ app.post('/updateExistingPatient', async (req, res) => {
                     message: 'Database error occurred' 
                 });
             }
-            
+
             if (result.affectedRows > 0) {
                 res.json({ 
                     success: true, 
@@ -513,7 +512,7 @@ app.post('/registerFreshPatient', async (req, res) => {
         const {
             patientID,
             username,
-            doctorID,
+            doctorID: doctorName, // this is actually the name now
             age,
             maritalStatus,
             education,
@@ -525,44 +524,44 @@ app.post('/registerFreshPatient', async (req, res) => {
             injuries
         } = req.body;
 
-        // Validate required fields
-        if (!patientID || !username || !doctorID || !age || !maritalStatus || !education || !occupation || monthlyIncome === undefined) {
-            return res.status(400).json({ 
-                success: false, 
-                message: 'All required fields must be filled' 
+        // Validation
+        if (!patientID || !username || !doctorName || !age || !maritalStatus || !education || !occupation || monthlyIncome === undefined) {
+            return res.status(400).json({
+                success: false,
+                message: 'All required fields must be filled'
             });
         }
 
-        // Check if patient ID already exists
+        // Resolve doctorID from doctorName
+        let resolvedDoctorID;
+        try {
+            resolvedDoctorID = await getDoctorIDByName(doctorName);
+        } catch (err) {
+            return res.status(400).json({ success: false, message: err.message });
+        }
+
+        // Check if patient already exists
         const checkQuery = 'SELECT patientID FROM patient WHERE patientID = ?';
-        
         mydb.query(checkQuery, [patientID], (err, results) => {
             if (err) {
                 console.error('Database error:', err);
-                return res.status(500).json({ 
-                    success: false, 
-                    message: 'Database error occurred' 
-                });
-            }
-            
-            if (results.length > 0) {
-                return res.status(400).json({ 
-                    success: false, 
-                    message: 'Patient ID already exists. Please choose a different ID.' 
-                });
+                return res.status(500).json({ success: false, message: 'Database error occurred' });
             }
 
-            // Insert new patient
+            if (results.length > 0) {
+                return res.status(400).json({ success: false, message: 'Patient ID already exists. Please choose a different ID.' });
+            }
+
             const insertQuery = `
                 INSERT INTO patient 
                 (patientID, patientName, doctorID, age, maritalStatus, education, occupation, monthlyIncome, height, weight, identificationMarks, injuries) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `;
-            
+
             const values = [
                 patientID,
                 username,
-                doctorID,
+                resolvedDoctorID,
                 age,
                 maritalStatus,
                 education,
@@ -573,18 +572,15 @@ app.post('/registerFreshPatient', async (req, res) => {
                 identificationMarks || null,
                 injuries || null
             ];
-            
+
             mydb.query(insertQuery, values, (err, result) => {
                 if (err) {
                     console.error('Database error:', err);
-                    return res.status(500).json({ 
-                        success: false, 
-                        message: 'Failed to register patient' 
-                    });
+                    return res.status(500).json({ success: false, message: 'Failed to register patient' });
                 }
-                
-                res.json({ 
-                    success: true, 
+
+                res.json({
+                    success: true,
                     message: 'Patient registered successfully',
                     patientID: patientID
                 });
@@ -592,12 +588,10 @@ app.post('/registerFreshPatient', async (req, res) => {
         });
     } catch (error) {
         console.error('Server error:', error);
-        res.status(500).json({ 
-            success: false, 
-            message: 'Server error occurred' 
-        });
+        res.status(500).json({ success: false, message: 'Server error occurred' });
     }
 });
+
 
 // 4. Route to register patient who was marked as "old" but didn't exist
 app.post('/registerOldPatient', async (req, res) => {
@@ -605,7 +599,7 @@ app.post('/registerOldPatient', async (req, res) => {
         const {
             patientID,
             username,
-            doctorID,
+            doctorID: doctorName,
             age,
             maritalStatus,
             education,
@@ -617,44 +611,38 @@ app.post('/registerOldPatient', async (req, res) => {
             injuries
         } = req.body;
 
-        // Validate required fields
-        if (!patientID || !username || !doctorID || !age || !maritalStatus || !education || !occupation || monthlyIncome === undefined) {
-            return res.status(400).json({ 
-                success: false, 
-                message: 'All required fields must be filled' 
-            });
+        if (!patientID || !username || !doctorName || !age || !maritalStatus || !education || !occupation || monthlyIncome === undefined) {
+            return res.status(400).json({ success: false, message: 'All required fields must be filled' });
         }
 
-        // For "old" patients that didn't exist, we still need to check for ID conflicts
+        let resolvedDoctorID;
+        try {
+            resolvedDoctorID = await getDoctorIDByName(doctorName);
+        } catch (err) {
+            return res.status(400).json({ success: false, message: err.message });
+        }
+
         const checkQuery = 'SELECT patientID FROM patient WHERE patientID = ?';
-        
         mydb.query(checkQuery, [patientID], (err, results) => {
             if (err) {
                 console.error('Database error:', err);
-                return res.status(500).json({ 
-                    success: false, 
-                    message: 'Database error occurred' 
-                });
-            }
-            
-            if (results.length > 0) {
-                return res.status(400).json({ 
-                    success: false, 
-                    message: 'Patient ID already exists. Please choose a different ID.' 
-                });
+                return res.status(500).json({ success: false, message: 'Database error occurred' });
             }
 
-            // Insert new patient (same as fresh, but we know it was initially marked as "old")
+            if (results.length > 0) {
+                return res.status(400).json({ success: false, message: 'Patient ID already exists. Please choose a different ID.' });
+            }
+
             const insertQuery = `
                 INSERT INTO patient 
                 (patientID, patientName, doctorID, age, maritalStatus, education, occupation, monthlyIncome, height, weight, identificationMarks, injuries) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `;
-            
+
             const values = [
                 patientID,
                 username,
-                doctorID,
+                resolvedDoctorID,
                 age,
                 maritalStatus,
                 education,
@@ -665,18 +653,15 @@ app.post('/registerOldPatient', async (req, res) => {
                 identificationMarks || null,
                 injuries || null
             ];
-            
+
             mydb.query(insertQuery, values, (err, result) => {
                 if (err) {
                     console.error('Database error:', err);
-                    return res.status(500).json({ 
-                        success: false, 
-                        message: 'Failed to register patient' 
-                    });
+                    return res.status(500).json({ success: false, message: 'Failed to register patient' });
                 }
-                
-                res.json({ 
-                    success: true, 
+
+                res.json({
+                    success: true,
                     message: 'Patient registered successfully (was marked as old but not found in database)',
                     patientID: patientID
                 });
@@ -684,12 +669,10 @@ app.post('/registerOldPatient', async (req, res) => {
         });
     } catch (error) {
         console.error('Server error:', error);
-        res.status(500).json({ 
-            success: false, 
-            message: 'Server error occurred' 
-        });
+        res.status(500).json({ success: false, message: 'Server error occurred' });
     }
 });
+
 
 // Optional: Route to get patient details (for debugging or additional features)
 app.get('/getPatientDetails/:patientID', async (req, res) => {
@@ -755,5 +738,31 @@ app.post('/uploadConsentAudio', upload.single('consentAudio'), async (req, res) 
     res.status(500).json({ success: false, message: 'Server error' });
   }
 });
+
+
+app.get('/searchDoctors', (req, res) => {
+    const query = req.query.q;
+    
+    let sql = "SELECT doctorID, doctorName FROM doctor";
+    let values = [];
+
+    if (query && query.trim()) {
+        sql += " WHERE doctorName LIKE ?";
+        values.push(`%${query.trim()}%`);
+    }
+
+    mydb.query(sql, values, (err, results) => {
+        if (err) {
+            console.error("Error in /searchDoctors:", err);
+            return res.status(500).json({ success: false, message: "Database query failed." });
+        }
+
+        return res.json({ success: true, doctors: results });
+    });
+});
+
+
+
+
 
 
