@@ -48,7 +48,7 @@
                     <form class="userInfo" id="initialForm">
                         <div class="trow">
                             <label for="initialName">Patient Name: </label>
-                            <input type="text" name="initialName" id="initialName" required>
+                            <input type="text" name="initialName" id="initialName" required >
                         </div>
                         
                         <div class="trow">
@@ -165,12 +165,12 @@
                             <label for="injuries">Injuries (if any):</label>
                             <textarea name="injuries" id="injuries" placeholder="Mention any injuries in detail..."></textarea>
                         </div>
-                    <div class="trow">
-                        <label for="initialDoctor">Assigned Doctor:</label>
-                        <input list="doctorList" id="initialDoctorInput" name="initialDoctor" placeholder="Type doctor's name" required>
-                        <datalist id="doctorList"></datalist>
-                    </div>
+                            <input type="hidden" name="doctorID" id="doctorID">
 
+                            <div class="trow">
+                                <label for="selectedDoctorName">Selected Doctor:</label>
+                                <input type="text" id="selectedDoctorName" name="selectedDoctorName" readonly>
+                            </div>
                         <div class="trow">
                             <label for="consentType">Consent Type to be given:</label>
                             <select name="consentType" id="consentType" class="consentType" required>

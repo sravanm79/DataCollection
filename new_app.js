@@ -506,13 +506,22 @@ app.post('/updateExistingPatient', async (req, res) => {
     }
 });
 
+async function getDoctorIDByName(connection, doctorName) {
+    const [rows] = await connection.execute(
+        'SELECT doctorID FROM doctor WHERE doctorName = ?',
+        [doctorName]
+    );
+    return rows.length > 0 ? rows[0].doctorID : null;
+}
+
+
 // 3. Route to register fresh patient (completely new)
 app.post('/registerFreshPatient', async (req, res) => {
     try {
         const {
             patientID,
             username,
-            doctorID: doctorName, // this is actually the name now
+            doctorID,
             age,
             maritalStatus,
             education,
@@ -524,23 +533,15 @@ app.post('/registerFreshPatient', async (req, res) => {
             injuries
         } = req.body;
 
-        // Validation
-        if (!patientID || !username || !doctorName || !age || !maritalStatus || !education || !occupation || monthlyIncome === undefined) {
+        console.log('Registering new patient:', req.body);
+
+        if (!patientID || !username || !doctorID || !age || !maritalStatus || !education || !occupation || monthlyIncome === undefined) {
             return res.status(400).json({
                 success: false,
                 message: 'All required fields must be filled'
             });
         }
 
-        // Resolve doctorID from doctorName
-        let resolvedDoctorID;
-        try {
-            resolvedDoctorID = await getDoctorIDByName(doctorName);
-        } catch (err) {
-            return res.status(400).json({ success: false, message: err.message });
-        }
-
-        // Check if patient already exists
         const checkQuery = 'SELECT patientID FROM patient WHERE patientID = ?';
         mydb.query(checkQuery, [patientID], (err, results) => {
             if (err) {
@@ -561,7 +562,7 @@ app.post('/registerFreshPatient', async (req, res) => {
             const values = [
                 patientID,
                 username,
-                resolvedDoctorID,
+                doctorID,
                 age,
                 maritalStatus,
                 education,
@@ -591,6 +592,8 @@ app.post('/registerFreshPatient', async (req, res) => {
         res.status(500).json({ success: false, message: 'Server error occurred' });
     }
 });
+
+
 
 
 // 4. Route to register patient who was marked as "old" but didn't exist
