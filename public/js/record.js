@@ -94,7 +94,7 @@
         const submitRecordingBtn = document.getElementById('submitRecordingBtn');
         const audioPlayer = document.getElementById('audioPlayer');
         const playRecordedAudioBtn = document.getElementById('playRecordedAudioBtn');
-        const fetchAndPlayExistingAudioBtn = document.getElementById('fetchAndPlayExistingAudioBtn');
+        // const fetchAndPlayExistingAudioBtn = document.getElementById('fetchAndPlayExistingAudioBtn');
 
         // State variables (simulated with global vars for vanilla JS)
         let isPatientValid = false;
@@ -141,7 +141,7 @@
             stopRecordingBtn.disabled = !isRecording || loading || isPlaying;
             submitRecordingBtn.disabled = !recordedAudioBlob || isRecording || loading || isPlaying;
             playRecordedAudioBtn.disabled = !recordedAudioBlob || isRecording || loading || isPlaying;
-            fetchAndPlayExistingAudioBtn.disabled = !isPatientValid || isRecording || loading || isPlaying;
+            // fetchAndPlayExistingAudioBtn.disabled = !isPatientValid || isRecording || loading || isPlaying;
 
             // Show/hide register button based on patient validation status
             if (!isPatientValid && patientIdInput.value.trim() && messageDisplay.textContent.includes("not found")) {
@@ -419,7 +419,12 @@
                 formData.append('patientId', pId); // Use patientId as backend expects
                 formData.append('audioFile', recordedAudioBlob, 'recording.wav');
 
-                const response = await fetch('/api/uploadAudio', { // Corrected to /api/uploadAudio
+                // const response = await fetch('/api/uploadAudio', { // Corrected to /api/uploadAudio
+                //     method: 'POST',
+                //     body: formData
+                // });
+                  // Use local-only API
+                const response = await fetch('/uploadRecording', {
                     method: 'POST',
                     body: formData
                 });
@@ -543,7 +548,7 @@
         stopRecordingBtn.addEventListener('click', stopRecording);
         submitRecordingBtn.addEventListener('click', submitRecording);
         playRecordedAudioBtn.addEventListener('click', () => playAudio());
-        fetchAndPlayExistingAudioBtn.addEventListener('click', fetchAndPlayExistingAudio);
+        // fetchAndPlayExistingAudioBtn.addEventListener('click', fetchAndPlayExistingAudio);
 
         // Initial setup on window load
         window.onload = async () => {

@@ -115,21 +115,41 @@
 
 
     // --- Routes ---
-    const uploadRecording = multer({ storage: multer.memoryStorage() });
-
-    app.post('/uploadRecording', uploadRecording.single('file'), async (req, res) => {
-    try {
+    // Setup diskStorage for large file support
+const storage = multer.diskStorage({
+    destination: async function (req, file, cb) {
         const patientId = req.body.patientId;
-        if (!req.file || !patientId) return res.status(400).send('No file or patientId.');
         const userDir = path.join(__dirname, 'public/recordings', patientId.toString());
-        await fsp.mkdir(userDir, { recursive: true });
-        const filePath = path.join(userDir, Date.now() + '-' + req.file.originalname);
-        await fsp.writeFile(filePath, req.file.buffer);
-        res.status(200).send('File uploaded!');
-    } catch (err) {
-        res.status(500).send('Upload failed.');
+
+        try {
+            await fsp.mkdir(userDir, { recursive: true });
+            cb(null, userDir);
+        } catch (err) {
+            cb(err);
+        }
+    },
+    filename: function (req, file, cb) {
+        const timestamp = Date.now();
+        const safeName = file.originalname.replace(/[^a-zA-Z0-9.-]/g, '_');
+        cb(null, `${timestamp}-${safeName}`);
     }
-    });
+});
+
+const uploadRecording = multer({ storage: storage });
+
+app.post('/uploadRecording', uploadRecording.single('audioFile'), (req, res) => {
+    try {
+        if (!req.file || !req.body.patientId) {
+            return res.status(400).json({ success: false, message: 'Missing file or patientId.' });
+        }
+
+        res.status(200).json({ success: true, message: 'File uploaded and saved successfully.' });
+    } catch (err) {
+        console.error('Upload error:', err);
+        res.status(500).json({ success: false, message: 'File upload failed.' });
+    }
+});
+
 
     // Home Page
     app.get('/', function(req, res) {
