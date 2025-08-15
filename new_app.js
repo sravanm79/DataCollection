@@ -50,68 +50,18 @@
     // Import the database connectivity file
     var mydb = require('./public/js/database'); // Ensure this file correctly exports a mysql connection
 
-    // --- SSL/HTTPS Setup ---
-    // Need to create a SSL private key and certificate for https
-    // IMPORTANT: For production, use secure methods to store and load these keys (e.g., environment variables, vault)
-    // These synchronous reads are fine here as they happen once at server startup
-
-
-    //Old part
-
-    // var privateKey = fs.readFileSync('privateKey.pem', 'utf8');
-    // var certificate = fs.readFileSync('certificate.pem', 'utf8');
-
-    // // Use key and certificate
-    // var credentials = { privateKey: privateKey, certificate: certificate };
-    // var port = 3000; // Define port
-
-    // // Access the public folder for static assets
+    
      app.use(express.static('public'));
 
-    // /* Create a https server */
-    // var httpsServer = https.createServer(
-    //     {
-    //         key: privateKey,
-    //         cert: certificate,
-    //         ciphers: [
-    //             "ECDHE-RSA-AES128-SHA256",
-    //             "DHE-RSA-AES128-SHA256",
-    //             "AES128-GCM-SHA256",
-    //             "RC4",
-    //             "HIGH",
-    //             "!MD5",
-    //             "!aNULL"
-    //         ].join(':'),
-    //     },
-    //     app
-    // );
-
-    // httpsServer.listen(port, function() {
-    //     console.log("HTTPS SERVER STARTED ON localhost:", port);
-    // });
-
-
-
-    //New only for local:
-
-    const http = require('http');
-    //const https = require('https');
-    const isProduction = process.env.NODE_ENV === 'production';
-
-    let server;
-    if (isProduction) {
+    
     const privateKey = fs.readFileSync('privateKey.pem', 'utf8');
-    const certificate = fs.readFileSync('certificate.pem', 'utf8');
-    server = https.createServer({ key: privateKey, cert: certificate }, app);
-    console.log("HTTPS server started");
-    } else {
-    server = http.createServer(app);
-    console.log("HTTP server started");
-    }
+const certificate = fs.readFileSync('certificate.pem', 'utf8');
 
-    server.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
-    });
+const server = https.createServer({ key: privateKey, cert: certificate }, app);
+
+server.listen(443, () => {
+  console.log(`✅ HTTPS Server started on port 443`);
+});
 
 
     // --- Routes ---

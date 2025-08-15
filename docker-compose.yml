@@ -8,6 +8,7 @@ services:
     container_name: my-node-app
     ports:
       - "3000:3000"
+      - "443:443"
     depends_on:
       - db
     command: ["./wait-for-it.sh", "db:3306", "--", "node", "new_app.js"]
