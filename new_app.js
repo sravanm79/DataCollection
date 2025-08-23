@@ -54,8 +54,8 @@
      app.use(express.static('public'));
 
     
-    const privateKey = fs.readFileSync('privateKey.pem', 'utf8');
-const certificate = fs.readFileSync('certificate.pem', 'utf8');
+    const privateKey = fs.readFileSync(path.join(__dirname, 'ssl', 'key.pem'), 'utf8');
+    const certificate = fs.readFileSync(path.join(__dirname, 'ssl', 'cert.pem'), 'utf8');
 
 const server = https.createServer({ key: privateKey, cert: certificate }, app);
 
