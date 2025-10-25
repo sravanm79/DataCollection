@@ -94,6 +94,7 @@ function initiateConsentRecording() {
     finalDisagreeBtn.disabled = true;
 
     // Start playback
+    cpaAudio.playbackRate = 0.85; // Adjust speed as desired (0.5–1.0)
     cpaAudio.play();
 
     // After consent audio finishes

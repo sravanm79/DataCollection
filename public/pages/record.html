@@ -4,41 +4,28 @@
     <title>IIIT Dharwad, Data Collection</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
     <link rel="stylesheet" href="/css/index.css">
-	<link rel="stylesheet" href="/css/footer.css">
-	<link rel="stylesheet" href="/css/carousel.css">
+    <link rel="stylesheet" href="/css/footer.css">
+    <link rel="stylesheet" href="/css/carousel.css">
     <link rel="stylesheet" href="/css/record.css">
-
-    <!-- Tailwind CSS CDN -->
-
-
 </head>
 <body>
-    <!-- Page Header -->
     <header class="header">
         <p class="title">Speech Data Collection at OPD DIMHANS Dharwad and IIIT Dharwad - NAIN 2.0</p>
     </header>
 
-    <!-- Page Navigation Links -->
-    <nav class="navbar" id="navbar" name="navbar">
+    <nav class="navbar" id="navbar">
         <a href="/">Home</a>
         <a href="aboutus">About Us</a>
         <a href="registration">Patient Registration</a>
         <a href="consent">Consent Form</a>
         <a href="recordData">Record Data</a>
         <a href="contactus">Contact us</a>
-        <!-- <a href="configure">Settings</a> -->
     </nav>
     
-    <!-- Section for Main Data -->
     <section class="row">
-        <!-- Page Left Column: To keep the left side blank -->
-        <aside class="leftcol">
-            <h3></h3>
-        </aside>
+        <aside class="leftcol"></aside>
 
-        <!-- Page Main Content -->
         <main class="main">
             <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
                 Audio Recording for "Speech to Speech Translation System"
@@ -46,124 +33,61 @@
             <hr class="my-6 border-gray-300">
 
             <div class="mb-6">
-                <label for="patientId" class="block text-gray-700 text-sm font-bold mb-2">
-                    Speaker ID (Patient ID):
-                </label>
-                <input
-                    type="text"
-                    id="patientId"
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"
-                    placeholder="Enter Patient ID (e.g., P001)"
-                />
-                <button
-                    id="checkPatientIdBtn"
-                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out w-full sm:w-auto"
-                >
-                    Check Speaker ID
-                </button>
-                <button
-                    id="registerPatientBtn"
-                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out w-full sm:w-auto mt-2 sm:ml-2 hidden"
-                    onclick="window.location.href='registration'"
-                >
-                    Register New Patient
-                </button>
+                <label for="patientId">Speaker ID (Patient ID):</label>
+                <input type="text" id="patientId" placeholder="Enter Patient ID (e.g., P001)" />
+                <button id="checkPatientIdBtn">Check Speaker ID</button>
+                <button id="registerPatientBtn" class="hidden" onclick="window.location.href='registration'">Register New Patient</button>
             </div>
 
             <div id="messageDisplay" class="message-display hidden"></div>
 
             <div class="mb-6 text-center">
-                <p class="text-gray-600 text-sm mb-2">Live Waveform:</p>
-                <canvas id="liveWaveformCanvas" width="800" height="60" class="w-full h-16"></canvas>
+                <p>Live Waveform:</p>
+                <canvas id="liveWaveformCanvas" width="800" height="60"></canvas>
             </div>
 
             <div class="flex flex-wrap justify-center gap-4 mb-6">
-                <button
-                    id="startRecordingBtn"
-                    class="bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled
-                >
-                    Start Recording
-                </button>
-                <button
-                    id="pauseResumeRecordingBtn"
-                    class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled
-                >
-                    Pause Recording
-                </button>
-
-                <button
-                    id="stopRecordingBtn"
-                    class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled
-                >
-                    Stop Recording
-                </button>
-                <button
-                    id="submitRecordingBtn"
-                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled
-                >
-                    Submit Recording
-                </button>
+                <button id="startRecordingBtn" disabled>Start Recording</button>
+                <button id="stopRecordingBtn" disabled>Stop Recording</button>
+                <button id="submitRecordingBtn" disabled>Submit Recording</button>
             </div>
 
             <div class="mb-6 text-center">
-                <p class="text-gray-600 text-sm mb-2">Recorded Audio Playback:</p>
-                <audio id="audioPlayer" controls class="w-full rounded-lg shadow-sm"></audio>
-                <p class="text-gray-600 text-sm mt-4 mb-2">Recorded Waveform:</p>
-                <canvas id="recordedWaveformCanvas" width="800" height="60" class="w-full h-16"></canvas>
+                <p>Recorded Audio Playback:</p>
+                <audio id="audioPlayer" controls></audio>
+                <p>Recorded Waveform:</p>
+                <canvas id="recordedWaveformCanvas" width="800" height="60"></canvas>
             </div>
 
             <div class="flex justify-center">
-                <button
-                    id="playRecordedAudioBtn"
-                    class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed mr-4"
-                    disabled
-                >
-                    Play Recorded Audio
-                </button>
-                <!-- Disabled using  local audio use only for now  -->
-                <!-- id="fetchAndPlayExistingAudioBtn" -->
-                <button
-                    
-                    class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled
-                >
-                    Fetch & Play Existing Audio
-                </button>
+                <button id="playRecordedAudioBtn" disabled>Play Recorded Audio</button>
             </div>
         </main>
         
-        <aside class="rightcol">
-            <h3></h3>
-        </aside>
+        <aside class="rightcol"></aside>
     </section>
 
-    <!-- Page Footer -->
     <footer class="footer">
-		<aside class="footcol">
-			<h3>About Us</h3>
-			<p>IIIT, Dharwad</p>
-		</aside>
-		<aside class="footcol">
-			<h4>Related Links</h4>
-			<a href="https://iiitdwd.ac.in/" target="_blank">IIIT Dharwad</a> <br>
-			<a href="https://www.aicte-india.org/" target="_blank">AICTE</a> <br>
-			<a href="https://www.ugc.ac.in/" target="_blank">UGC</a> 
-		</aside>
-		<aside class="footcol">
-			<h4>Follow IIIT Dharwad</h4>
-			<a href="https://www.facebook.com/" target="_blank">Facebook</a> <br>
-			<a href="https://twitter.com/" target="_blank">Twitter</a>
-			<br>
-			<a href="https://www.instagram.com/" target="_blank">Instagram</a> 
-		</aside>
-		<section align="Center">
-			<i><b>All rights are reserved to IIIT Dharwad</b></i>
-		</section>
-	</footer>
+        <aside class="footcol">
+            <h3>About Us</h3>
+            <p>IIIT, Dharwad</p>
+        </aside>
+        <aside class="footcol">
+            <h4>Related Links</h4>
+            <a href="https://iiitdwd.ac.in/" target="_blank">IIIT Dharwad</a><br>
+            <a href="https://www.aicte-india.org/" target="_blank">AICTE</a><br>
+            <a href="https://www.ugc.ac.in/" target="_blank">UGC</a>
+        </aside>
+        <aside class="footcol">
+            <h4>Follow IIIT Dharwad</h4>
+            <a href="https://www.facebook.com/" target="_blank">Facebook</a><br>
+            <a href="https://twitter.com/" target="_blank">Twitter</a><br>
+            <a href="https://www.instagram.com/" target="_blank">Instagram</a>
+        </aside>
+        <section align="center">
+            <i><b>All rights are reserved to IIIT Dharwad</b></i>
+        </section>
+    </footer>
 
     <script src="/js/record.js"></script>
 </body>
