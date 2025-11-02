@@ -171,3 +171,25 @@
     outline: 3px solid rgba(0, 123, 255, 0.5);
     outline-offset: 2px;
 }
+
+    /* neat alignment for patient ID + submit + language switch */
+    #checkPatientForm {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    #checkPatientForm label {
+      min-width: 120px;
+    }
+
+    #langToggle {
+      padding: 5px;
+      font-size: 14px;
+    }
+
+    .lang-label {
+      font-weight: bold;
+      margin-left: 10px;
+    }

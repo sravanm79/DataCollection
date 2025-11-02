@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <title>Psychiatric Evaluation Consent – IIIT Dharwad</title>
   <meta charset="utf-8">
@@ -13,13 +13,15 @@
   <script type="text/javascript" src="./js/dateTime.js"></script>
   <script type="text/javascript" src="./js/wavesurfer-5.2.0.js"></script>
   <script type="text/javascript" src="./js/wavesurfer-timeline.js"></script>
+
 </head>
+
 <body>
   <header class="header">
     <p class="title">Speech Data Collection at OPD DIMHANS Dharwad and IIIT Dharwad - NAIN 2.0</p>
   </header>
 
-  <nav class="navbar" id="navbar" name="navbar">
+  <nav class="navbar" id="navbar">
     <a href="/">Home</a>
     <a href="aboutus">About Us</a>
     <a href="registration">Patient Registration</a>
@@ -31,56 +33,63 @@
   <div class="main-content-wrapper" style="display:flex; justify-content:center; align-items:center;">
     <main class="main">
       <hr style="margin-top: 30px; border-color: #ddd;">
-      <h2 class="conTitle">Psychiatric Evaluation Information Consent</h2>
+      <h2 class="conTitle" id="pageTitle">Psychiatric Evaluation Information Consent</h2>
 
       <section class="recordSection">
-          <div class="inputCount">
-              <hr style="border-color: #eee;">
-              <form id="checkPatientForm">
-                  <label for="patientID">Enter Patient ID:</label>
-                  <input type="text" id="patientID" name="patientID" required>
-                  <input type="submit" value="Submit" class="submit" id="submitPatientID">
-                  <hr style="border-color: #eee;">
-              </form>
-          </div>
+        <div class="inputCount">
+          <hr style="border-color: #eee;">
+          <form id="checkPatientForm">
+            <label for="patientID" id="patientIdLabel">Enter Patient ID:</label>
+            <input type="text" id="patientID" name="patientID" required>
+            <input type="submit" value="Submit" class="submit" id="submitPatientID">
+
+            <!-- Language toggle beside submit -->
+            <label for="langToggle" class="lang-label">Language:</label>
+            <select id="langToggle">
+              <option value="en">English</option>
+              <option value="kn">ಕನ್ನಡ</option>
+            </select>
+          </form>
+          <hr style="border-color: #eee;">
+        </div>
       </section>
 
       <section id="consentSection">
         <article class="consentContainer">
           <div class="consentText" style="text-align: justify; margin: 20px;">
-            <h3>CONFIDENTIALITY</h3>
-            <p>
-              The information collected from you will be maintained with strict confidentiality. Only investigators who are part of this study will have access to the study records. The data collected from this study will be reported in general terms and will not involve any identity names. All data will be kept confidential. Participant data will be kept confidential except in cases where the researcher is legally obligated to report specific incidents. These include, but may not be limited to, incidents of abuse and suicide risk.
+            <h3 id="confidentialityTitle">CONFIDENTIALITY</h3>
+            <p id="confidentialityText">
+              The information collected from you will be maintained with strict confidentiality...
             </p>
 
-            <h3>VOLUNTARY PARTICIPATION</h3>
-            <p>
-              Your participation in this study is voluntary. It is up to you to decide whether or not to take part in this study. If you decide to take part in this study, you will be asked to sign a consent form. After you sign the consent form, you are still free to withdraw at any time and without giving a reason. Withdrawing from this study will not affect the relationship you have, if any, with the researcher. If you withdraw from the study before data collection is completed, your data will be returned to you or destroyed.
+            <h3 id="voluntaryTitle">VOLUNTARY PARTICIPATION</h3>
+            <p id="voluntaryText">
+              Your participation in this study is voluntary...
             </p>
 
-            <h3>CONSENT</h3>
-            <p>
-              I have read and I understand the provided information and have had the opportunity to ask questions. I understand that my participation is voluntary and that I am free to withdraw at any time, without giving a reason and without cost. I understand that I will be given a copy of this consent form. I voluntarily agree to take part in this study.
+            <h3 id="consentTitle">CONSENT</h3>
+            <p id="consentText">
+              I have read and understood the provided information...
             </p>
           </div>
 
-          <div class="consentPreAudio" style="display: none;">
-              <audio class="CPAudio" id="CPAudio" name="CPAudio">
-                  <source src="./sounds/consent.mp3" type="audio/mp3">
-                  Your browser does not support the audio tag.
-              </audio>
-          </div>
-          <div class="recIcon" style="display: none;">
-              <p name="recordingImg" class="recordingImg" id="recordingImg">Playing..</p>
-              <p name="stoppedRec" class="stoppedRec" id="stoppedRec"></p>
+          <div class="consentPreAudio">
+            <audio class="CPAudio" id="CPAudio" name="CPAudio" controls>
+              <source id="audioSource" src="./sounds/consent.mp3" type="audio/mp3">
+              Your browser does not support the audio tag.
+            </audio>
           </div>
 
-          <form id="submitConsentForm" style="margin-top: 20px; display: none;">
+          <div class="recIcon" style="display:none;">
+            <p id="recordingImg">Playing..</p>
+            <p id="stoppedRec"></p>
+          </div>
+
+          <form id="submitConsentForm" style="margin-top: 20px; display:none;">
             <input type="hidden" name="patientID" id="consentPatientID">
             <button type="submit" id="finalAgreeBtn">Confirm Recorded Consent</button>
             <button type="button" id="finalDisagreeBtn">Cancel Recording</button>
           </form>
-
         </article>
       </section>
     </main>
@@ -105,9 +114,36 @@
     </aside>
   </footer>
 
-  <section class="copyright" align="Center">
+  <section class="copyright" align="center">
     <i><b>All rights are reserved to IIIT Dharwad</b></i>
   </section>
-  <script src="../js/consent.js"></script>
+
+  <script src="./js/translations.js"></script>
+  <script>
+    const langSelect = document.getElementById("langToggle");
+    const audioSource = document.getElementById("audioSource");
+
+    function setLanguage(lang) {
+      const t = translations[lang];
+      document.getElementById("pageTitle").innerText = t.title;
+      document.getElementById("confidentialityTitle").innerText = t.confidentialityTitle;
+      document.getElementById("confidentialityText").innerText = t.confidentialityText;
+      document.getElementById("voluntaryTitle").innerText = t.voluntaryTitle;
+      document.getElementById("voluntaryText").innerText = t.voluntaryText;
+      document.getElementById("consentTitle").innerText = t.consentTitle;
+      document.getElementById("consentText").innerText = t.consentText;
+      document.getElementById("patientIdLabel").innerText = t.enterPatientId;
+      document.getElementById("submitPatientID").value = t.submit;
+
+      // Switch audio
+      audioSource.src = lang === "kn" ? "./sounds/consent.mp3" : "./sounds/consent.mp3";
+      document.getElementById("CPAudio").load();
+    }
+
+    setLanguage("en");
+    langSelect.addEventListener("change", (e) => setLanguage(e.target.value));
+  </script>
+
+  <script src="./js/consent.js"></script>
 </body>
 </html>

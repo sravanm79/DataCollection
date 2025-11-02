@@ -10,6 +10,7 @@ const stopRecordingBtn = document.getElementById('stopRecordingBtn');
 const submitRecordingBtn = document.getElementById('submitRecordingBtn');
 const audioPlayer = document.getElementById('audioPlayer');
 const playRecordedAudioBtn = document.getElementById('playRecordedAudioBtn');
+const downloadRecordingBtn = document.getElementById('downloadRecordingBtn'); 
 
 // State variables
 let isPatientValid = false;
@@ -42,6 +43,7 @@ function setButtonStates() {
     stopRecordingBtn.disabled = !isRecording;
     submitRecordingBtn.disabled = !recordedAudioBlob;
     playRecordedAudioBtn.disabled = !recordedAudioBlob;
+    downloadRecordingBtn.disabled = !recordedAudioBlob;
     registerPatientBtn.classList.toggle('hidden', isPatientValid || !patientIdInput.value.trim());
 }
 
@@ -157,8 +159,33 @@ function stopRecording() {
         drawRecordedWaveform(recordedAudioBlob);
         updateMessage('Recording stopped. Ready to submit.','success');
         setButtonStates();
+
+        // ✅ Enable download button
+        downloadRecordingBtn.disabled = false;
     };
     setButtonStates();
+}
+
+// ✅ Download Recording Function
+function downloadRecording() {
+    if (!recordedAudioBlob) {
+        updateMessage('No recording available to download', 'error');
+        return;
+    }
+
+    const url = URL.createObjectURL(recordedAudioBlob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    const pId = patientIdInput.value.trim() || 'unknown';
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    a.download = `${pId}_recording_${timestamp}.wav`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    updateMessage('Recording downloaded to your device.', 'success');
 }
 
 // Convert WebM to WAV
@@ -263,6 +290,7 @@ startRecordingBtn.addEventListener('click',startRecording);
 stopRecordingBtn.addEventListener('click',stopRecording);
 submitRecordingBtn.addEventListener('click',submitRecording);
 playRecordedAudioBtn.addEventListener('click',playAudio);
+downloadRecordingBtn.addEventListener('click', downloadRecording);
 
 // Init
 window.onload = async ()=>{
