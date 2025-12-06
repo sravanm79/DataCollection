@@ -1,6 +1,7 @@
 -- phpMyAdmin SQL Dump
 -- version 5.0.2
--- Updated with additional optional fields: height, weight, identification marks, injuries
+-- Updated with patientID as BIGINT and minimum 14 digits validation
+-- Includes optional fields: height, weight, identification marks, injuries
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +19,7 @@ CREATE TABLE `doctor` (
 
 -- Table: patient
 CREATE TABLE `patient` (
-  `patientID` VARCHAR(50) NOT NULL,
+  `patientID` BIGINT NOT NULL,
   `patientName` VARCHAR(100) NOT NULL,
   `doctorID` INT NOT NULL,
   `age` INT NOT NULL,
@@ -34,12 +35,15 @@ CREATE TABLE `patient` (
   `injuries` TEXT,
 
   PRIMARY KEY (`patientID`),
-  FOREIGN KEY (`doctorID`) REFERENCES `doctor`(`doctorID`)
+  FOREIGN KEY (`doctorID`) REFERENCES `doctor`(`doctorID`),
+
+  -- Enforce minimum 14-digit patient ID
+  CONSTRAINT chk_patientID_length CHECK (`patientID` >= 10000000000000)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Table: patientConsent  
+-- Table: patientConsent
 CREATE TABLE `patientConsent` (
-  `patientID` VARCHAR(50) NOT NULL,
+  `patientID` BIGINT NOT NULL,
   `consentGiven` ENUM('Yes', 'No') DEFAULT NULL,
   `consentAudio` LONGBLOB DEFAULT NULL,
   PRIMARY KEY (`patientID`),
@@ -49,14 +53,14 @@ CREATE TABLE `patientConsent` (
 -- Table: patientAudio
 CREATE TABLE `patientAudio` (
   `audioID` INT NOT NULL AUTO_INCREMENT,
-  `patientID` VARCHAR(50) NOT NULL,
+  `patientID` BIGINT NOT NULL,
   `recordingDate` DATETIME NOT NULL,
   `audioFile` LONGBLOB NOT NULL,
   PRIMARY KEY (`audioID`),
   FOREIGN KEY (`patientID`) REFERENCES `patient`(`patientID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-
+-- Insert Doctors
 INSERT INTO `doctor` (`doctorName`) VALUES
 ('Dr. Ranganath Kulkarni'),
 ('Dr. Raghavendra B-nayak'),
@@ -83,16 +87,16 @@ INSERT INTO `doctor` (`doctorName`) VALUES
 ('Dr. Pavankumar V'),
 ('Dr. Pavansing Tiwari');
 
-
+-- Sample Patients (Updated patientID to 14 digits)
 INSERT INTO `patient` (
   `patientID`, `patientName`, `doctorID`, `age`, `maritalStatus`, `education`, `occupation`, `monthlyIncome`,
   `height`, `weight`, `identificationMarks`, `injuries`
 ) VALUES
-('P001', 'Ravi Kumar', 1, 35, 'Married', 'Graduate', 'Engineer', 50000, '170 cm', '70 kg', 'Mole on left cheek', ''),
-('P002', 'Anita Desai', 2, 28, 'Single', 'Postgraduate', 'Teacher', 40000, '160 cm', '55 kg', '', 'Fractured arm (healed)');
+(20251206000001, 'Ravi Kumar', 1, 35, 'Married', 'Graduate', 'Engineer', 50000, '170 cm', '70 kg', 'Mole on left cheek', ''),
+(20251206000002, 'Anita Desai', 2, 28, 'Single', 'Postgraduate', 'Teacher', 40000, '160 cm', '55 kg', '', 'Fractured arm (healed)');
 
 INSERT INTO `patientConsent` (`patientID`, `consentGiven`) VALUES
-('P001', 'Yes'),
-('P002', 'No');
+(20251206000001, 'Yes'),
+(20251206000002, 'No');
 
 COMMIT;

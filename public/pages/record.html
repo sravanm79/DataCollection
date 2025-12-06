@@ -34,9 +34,17 @@
 
             <!-- Patient ID and Doctor -->
             <div class="mb-6">
-                <label for="patientId">Speaker ID (Patient ID):</label>
-                <input type="text" id="patientId" placeholder="Enter Patient ID (e.g., P001)" />
-                <button id="checkPatientIdBtn">Check Speaker ID</button>
+                <label for="patientId">Patient ID:</label>
+                <input
+                    type="text"
+                    id="patientId"
+                    placeholder="Enter 14-digit Patient ID"
+                    minlength="14"
+                    maxlength="20"
+                    pattern="\d{14,}"
+                    inputmode="numeric"
+                />
+                <button id="checkPatientIdBtn">Check Patient ID</button>
                 <button id="registerPatientBtn" class="hidden" onclick="window.location.href='registration'">Register New Patient</button>
             </div>
 

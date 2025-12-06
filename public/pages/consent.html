@@ -38,9 +38,23 @@
       <section class="recordSection">
         <div class="inputCount">
           <hr style="border-color: #eee;">
+          
           <form id="checkPatientForm">
             <label for="patientID" id="patientIdLabel">Enter Patient ID:</label>
-            <input type="text" id="patientID" name="patientID" required>
+
+            <!-- UPDATED FIELD -->
+            <input 
+              type="text" 
+              id="patientID" 
+              name="patientID" 
+              required
+              pattern="\d{14,}"
+              minlength="14"
+              maxlength="20"
+              inputmode="numeric"
+              placeholder="Enter minimum 14-digit Patient ID"
+            >
+
             <input type="submit" value="Submit" class="submit" id="submitPatientID">
 
             <!-- Language toggle beside submit -->
@@ -50,6 +64,7 @@
               <option value="kn">ಕನ್ನಡ</option>
             </select>
           </form>
+
           <hr style="border-color: #eee;">
         </div>
       </section>
@@ -85,11 +100,19 @@
             <p id="stoppedRec"></p>
           </div>
 
+          <!-- HIDDEN CONSENT FORM WITH UPDATED VALIDATION -->
           <form id="submitConsentForm" style="margin-top: 20px; display:none;">
-            <input type="hidden" name="patientID" id="consentPatientID">
+            <input 
+              type="hidden" 
+              name="patientID" 
+              id="consentPatientID"
+              pattern="\d{14,}"
+              minlength="14"
+            >
             <button type="submit" id="finalAgreeBtn">Confirm Recorded Consent</button>
             <button type="button" id="finalDisagreeBtn">Cancel Recording</button>
           </form>
+
         </article>
       </section>
     </main>
@@ -119,7 +142,15 @@
   </section>
 
   <script src="./js/translations.js"></script>
+
+  <!-- EXTRA INPUT VALIDATION (Only digits) -->
   <script>
+    const patientInput = document.getElementById("patientID");
+
+    patientInput.addEventListener("input", function () {
+      this.value = this.value.replace(/\D/g, ""); // remove non-digits
+    });
+
     const langSelect = document.getElementById("langToggle");
     const audioSource = document.getElementById("audioSource");
 
@@ -135,8 +166,7 @@
       document.getElementById("patientIdLabel").innerText = t.enterPatientId;
       document.getElementById("submitPatientID").value = t.submit;
 
-      // Switch audio
-      audioSource.src = lang === "kn" ? "./sounds/consent.mp3" : "./sounds/consent.mp3";
+      audioSource.src = "./sounds/consent.mp3";
       document.getElementById("CPAudio").load();
     }
 

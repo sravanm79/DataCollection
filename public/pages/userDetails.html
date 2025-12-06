@@ -28,9 +28,7 @@
     </nav>
     
     <section class="row">
-        <aside class="leftcol">
-            <h3></h3>
-        </aside>
+        <aside class="leftcol"><h3></h3></aside>
 
         <main class="main">
             <h2 align="Center">
@@ -39,7 +37,7 @@
             </h2> 
             <hr>
             
-            <!-- Initial Form - Only 4 Fields -->
+            <!-- Initial Form -->
             <section id="initialFormSection" class="initial-form">
                 <div class="userDetails">
                     <h3 class="head5">Please fill the basic details first.</h3>
@@ -49,7 +47,18 @@
                         
                         <div class="trow">
                             <label for="initialPatientID">Patient UH ID: </label>
-                            <input type="text" name="initialPatientID" id="initialPatientID" required placeholder="Enter a unique patient UH ID">
+                            <input 
+                                type="text"
+                                name="initialPatientID"
+                                id="initialPatientID"
+                                required
+                                placeholder="Enter a 14-digit UH ID"
+                                pattern="\d{14}"
+                                minlength="14"
+                                maxlength="14"
+                                inputmode="numeric"
+                                oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 14)"
+                            >
                         </div>
 
                         <div class="trow">
@@ -76,13 +85,14 @@
                 </div>
             </section>
 
-            <!-- Expanded Form - All Fields -->
+            <!-- Expanded Form -->
             <section id="expandedFormSection" class="expanded-form">
                 <div class="userDetails">
                     <h3 class="head5">Please fill the following details carefully.</h3>
                     <div id="expandedMessageArea"></div>
                     
                     <form class="userInfo" id="expandedForm">
+                        
                         <div class="trow">
                             <label for="username">Patient Name: </label>
                             <input type="text" name="username" id="username" required placeholder="Enter patient name">
@@ -90,7 +100,16 @@
                         
                         <div class="trow">
                             <label for="patientID">Patient UH ID: </label>
-                            <input type="text" name="patientID" id="patientID" required readonly>
+                            <input 
+                                type="text" 
+                                inputmode="numeric"
+                                name="patientID" 
+                                id="patientID" 
+                                minlength="14"
+                                maxlength="14"
+                                required 
+                                readonly
+                            >
                         </div>
 
                         <div class="trow">
@@ -161,12 +180,14 @@
                             <label for="injuries">Injuries (if any):</label>
                             <textarea name="injuries" id="injuries" placeholder="Mention any injuries in detail..."></textarea>
                         </div>
-                            <input type="hidden" name="doctorID" id="doctorID">
 
-                            <div class="trow">
-                                <label for="selectedDoctorName">Selected Doctor:</label>
-                                <input type="text" id="selectedDoctorName" name="selectedDoctorName" readonly>
-                            </div>
+                        <input type="hidden" name="doctorID" id="doctorID">
+
+                        <div class="trow">
+                            <label for="selectedDoctorName">Selected Doctor:</label>
+                            <input type="text" id="selectedDoctorName" name="selectedDoctorName" readonly>
+                        </div>
+
                         <div class="trow">
                             <label for="consentType">Consent Type to be given:</label>
                             <select name="consentType" id="consentType" class="consentType" required>
@@ -194,11 +215,10 @@
                 <h3 id="popupTitle">Registration Successful!</h3>
                 <p id="popupMessage">Your Patient UH ID is: <span id="displayPatientId"></span></p>
             </div>
+
         </main>
         
-        <aside class="rightcol">
-            <h3></h3>
-        </aside>
+        <aside class="rightcol"><h3></h3></aside>
     </section>
 
     <footer class="footer">
@@ -208,16 +228,15 @@
         </aside>
         <aside class="footcol">
             <h4>Related Links</h4>
-            <a href="https://iiitdwd.ac.in/" target="_blank">IIIT Dharwad</a> <br>
-            <a href="https://www.aicte-india.org/" target="_blank">AICTE</a> <br>
-            <a href="https://www.ugc.ac.in/" target="_blank">UGC</a> 
+            <a href="https://iiitdwd.ac.in/" target="_blank">IIIT Dharwad</a><br>
+            <a href="https://www.aicte-india.org/" target="_blank">AICTE</a><br>
+            <a href="https://www.ugc.ac.in/" target="_blank">UGC</a>
         </aside>
         <aside class="footcol">
             <h4>Follow IIIT Dharwad</h4>
-            <a href="https://www.facebook.com/" target="_blank">Facebook</a> <br>
-            <a href="https://twitter.com/" target="_blank">Twitter</a>
-            <br>
-            <a href="https://www.instagram.com/" target="_blank">Instagram</a> 
+            <a href="https://www.facebook.com/" target="_blank">Facebook</a><br>
+            <a href="https://twitter.com/" target="_blank">Twitter</a><br>
+            <a href="https://www.instagram.com/" target="_blank">Instagram</a>
         </aside>
         <section align="Center">
             <i><b>All rights are reserved to IIIT Dharwad</b></i>
