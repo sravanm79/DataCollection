@@ -32,6 +32,7 @@
             </h2>
             <hr class="my-6 border-gray-300">
 
+            <!-- Patient ID and Doctor -->
             <div class="mb-6">
                 <label for="patientId">Speaker ID (Patient ID):</label>
                 <input type="text" id="patientId" placeholder="Enter Patient ID (e.g., P001)" />
@@ -41,11 +42,17 @@
 
             <div id="messageDisplay" class="message-display hidden"></div>
 
+            <!-- Doctor Dropdown -->
+            <div id="doctorDropdownContainer" class="mb-6 hidden">
+                <label for="doctorSelect">Select Doctor:</label>
+                <select id="doctorSelect"></select>
+            </div>
+
+            <!-- Waveform & Controls -->
             <div class="mb-6 text-center">
                 <p>Live Waveform:</p>
                 <canvas id="liveWaveformCanvas" width="800" height="60"></canvas>
             </div>
-
             <div class="flex flex-wrap justify-center gap-4 mb-6">
                 <button id="startRecordingBtn" disabled>Start Recording</button>
                 <button id="stopRecordingBtn" disabled>Stop Recording</button>

@@ -304,3 +304,40 @@
             min-width: 0 !important;
         }
         }
+
+        /* Doctor Dropdown Styling */
+#doctorDropdownContainer {
+    margin-bottom: 24px;
+}
+
+#doctorDropdownContainer label {
+    display: block;
+    font-weight: 600;
+    color: #374151; /* dark gray text */
+    margin-bottom: 6px;
+    font-size: 1rem;
+}
+
+#doctorDropdownContainer select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid #d1d5db; /* light gray border */
+    border-radius: 7px;
+    background-color: #f9fafb;
+    font-size: 1rem;
+    color: #111827; /* dark text */
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+#doctorDropdownContainer select:hover {
+    border-color: #2563eb; /* blue border on hover */
+    background-color: #ffffff;
+}
+
+#doctorDropdownContainer select:focus {
+    border-color: #2563eb; /* blue border on focus */
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2); /* subtle focus ring */
+}

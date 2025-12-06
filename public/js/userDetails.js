@@ -28,7 +28,7 @@ function showExpandedForm(mode, errorMsg = null, doctorIDFromInitial = '', docto
     document.getElementById('expandedFormSection').style.display = 'block';
     currentMode = mode;
 
-    document.getElementById('username').value = document.getElementById('initialName').value;
+    document.getElementById('username').value = ''; // user enters name in expanded form
     document.getElementById('patientID').value = document.getElementById('initialPatientID').value;
     document.getElementById('doctorID').value = doctorIDFromInitial || '';
     document.getElementById('selectedDoctorName').value = doctorNameFromInitial || '';
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('initialForm').addEventListener('submit', async function (e) {
         e.preventDefault();
 
-        const name = document.getElementById('initialName').value.trim();
+        // const name = document.getElementById('initialName').value.trim();
         const patientID = document.getElementById('initialPatientID').value.trim();
         const doctorName = document.getElementById('initialDoctorInput').value.trim();
         const opdType = document.getElementById('opdType').value;
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const doctorID = matchedDoctor.getAttribute('data-id');
-        if (!name || !patientID || !doctorID || !opdType) {
+        if (!patientID || !doctorID || !opdType) {
             showMessage('messageArea', 'Please fill all required fields.', 'error');
             return;
         }
@@ -116,7 +116,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             patientID,
-                            patientName: name,
                             doctorID
                         })
                     });
@@ -194,8 +193,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('closePopup').addEventListener('click', () => {
         document.getElementById('patientIdPopup').style.display = 'none';
-        document.getElementById('initialForm').reset();
-        document.getElementById('expandedForm').reset();
-        showInitialForm();
+        // document.getElementById('initialForm').reset();
+        // document.getElementById('expandedForm').reset();
+        // showInitialForm();
+        window.location.href = "/consent";
     });
 });

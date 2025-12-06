@@ -68,37 +68,71 @@ server.listen(443, () => {
     // Setup diskStorage for large file support
 const storage = multer.diskStorage({
     destination: async function (req, file, cb) {
-        const patientId = req.body.patientId;
-        const userDir = path.join(__dirname, 'public/recordings', patientId.toString());
-
         try {
-            await fsp.mkdir(userDir, { recursive: true });
-            cb(null, userDir);
+            const patientId = req.body.patientId;
+            let doctorName = req.body.doctorName;
+
+            if (!patientId || !doctorName) throw new Error('Missing patientId or doctorName');
+
+            // Sanitize doctorName for filesystem
+            doctorName = doctorName.replace(/[^a-z0-9_\-]/gi, '_');
+
+            const destPath = path.join(__dirname, 'public', 'recordings', patientId, doctorName);
+            await fsp.mkdir(destPath, { recursive: true });
+
+            cb(null, destPath);
         } catch (err) {
             cb(err);
         }
     },
     filename: function (req, file, cb) {
-        const timestamp = Date.now();
-        const safeName = file.originalname.replace(/[^a-zA-Z0-9.-]/g, '_');
-        cb(null, `${timestamp}-${safeName}`);
+        const patientId = req.body.patientId;
+        const now = new Date();
+        const istOffset = 5.5 * 60;
+        const localOffset = now.getTimezoneOffset();
+        const istTime = new Date(now.getTime() + (istOffset + localOffset) * 60000);
+
+        const dd = String(istTime.getDate()).padStart(2, "0");
+        const mm = String(istTime.getMonth() + 1).padStart(2, "0");
+        const yyyy = istTime.getFullYear();
+        const hh = String(istTime.getHours()).padStart(2, "0");
+        const min = String(istTime.getMinutes()).padStart(2, "0");
+        const ss = String(istTime.getSeconds()).padStart(2, "0");
+
+        const timestamp = `${dd}${mm}${yyyy}_${hh}${min}${ss}`;
+        const ext = path.extname(file.originalname) || ".wav";
+
+        cb(null, `${patientId}_${timestamp}${ext}`);
     }
 });
+
+
 
 const uploadRecording = multer({ storage: storage });
 
-app.post('/uploadRecording', uploadRecording.single('audioFile'), (req, res) => {
+// Updated: Audio saving -> patient folder -> doctorID subfolder
+app.post('/uploadRecording', uploadRecording.single('audioFile'), async (req, res) => {
     try {
-        if (!req.file || !req.body.patientId) {
-            return res.status(400).json({ success: false, message: 'Missing file or patientId.' });
+        const { patientId, doctorName } = req.body;
+
+        if (!req.file || !patientId || !doctorName) {
+            return res.status(400).json({ success: false, message: 'Missing file, patientId, or doctorName.' });
         }
 
-        res.status(200).json({ success: true, message: 'File uploaded and saved successfully.' });
+        return res.status(200).json({
+            success: true,
+            message: 'Recording uploaded successfully.',
+            fileName: req.file.filename,
+            filePath: req.file.path,
+            patientId,
+            doctorName
+        });
     } catch (err) {
-        console.error('Upload error:', err);
-        res.status(500).json({ success: false, message: 'File upload failed.' });
+        console.error("Upload error:", err);
+        return res.status(500).json({ success: false, message: 'File upload failed: ' + err.message });
     }
 });
+
 
 
     // Home Page
@@ -435,46 +469,68 @@ app.get('/getAudio/:patientId', (req, res) => {
 // 2. Route to update existing patient's name and doctor
 app.post('/updateExistingPatient', async (req, res) => {
     try {
-        const { patientID, patientName, doctorID } = req.body;
+        const { patientID, doctorID } = req.body;
 
-        if (!patientID || !patientName || !doctorID) {
-            return res.status(400).json({ 
-                success: false, 
-                message: 'Patient ID, name, and doctor ID are required' 
+        // Validate input
+        if (!patientID || !doctorID) {
+            return res.status(400).json({
+                success: false,
+                message: 'Patient ID and Doctor ID are required'
             });
         }
 
-        const updateQuery = 'UPDATE patient SET patientName = ?, doctorID = ? WHERE patientID = ?';
-        
-        mydb.query(updateQuery, [patientName, doctorID, patientID], (err, result) => {
-            if (err) {
-                console.error('Database error:', err);
-                return res.status(500).json({ 
-                    success: false, 
-                    message: 'Database error occurred' 
+        // Check if patient exists
+        const checkQuery = 'SELECT * FROM patient WHERE patientID = ?';
+        mydb.query(checkQuery, [patientID], (checkErr, checkResult) => {
+            if (checkErr) {
+                console.error('Database error (check):', checkErr);
+                return res.status(500).json({
+                    success: false,
+                    message: 'Database error occurred while checking patient'
                 });
             }
 
-            if (result.affectedRows > 0) {
-                res.json({ 
-                    success: true, 
-                    message: 'Patient information updated successfully' 
-                });
-            } else {
-                res.status(404).json({ 
-                    success: false, 
-                    message: 'Patient not found or no changes made' 
+            if (checkResult.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Patient not found'
                 });
             }
+
+            // Update doctorID
+            const updateQuery = 'UPDATE patient SET doctorID = ? WHERE patientID = ?';
+            mydb.query(updateQuery, [doctorID, patientID], (updateErr, updateResult) => {
+                if (updateErr) {
+                    console.error('Database error (update):', updateErr);
+                    return res.status(500).json({
+                        success: false,
+                        message: 'Database error occurred while updating patient'
+                    });
+                }
+
+                if (updateResult.affectedRows > 0) {
+                    return res.json({
+                        success: true,
+                        message: 'Patient doctor updated successfully'
+                    });
+                } else {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'No changes were made to the patient record'
+                    });
+                }
+            });
         });
+
     } catch (error) {
         console.error('Server error:', error);
-        res.status(500).json({ 
-            success: false, 
-            message: 'Server error occurred' 
+        res.status(500).json({
+            success: false,
+            message: 'Server error occurred'
         });
     }
 });
+
 
 async function getDoctorIDByName(connection, doctorName) {
     const [rows] = await connection.execute(

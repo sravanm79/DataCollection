@@ -1,8 +1,10 @@
-// DOM Elements
+// ---------------- DOM Elements ----------------
 const patientIdInput = document.getElementById('patientId');
 const checkPatientIdBtn = document.getElementById('checkPatientIdBtn');
 const registerPatientBtn = document.getElementById('registerPatientBtn');
 const messageDisplay = document.getElementById('messageDisplay');
+const doctorDropdownContainer = document.getElementById('doctorDropdownContainer');
+const doctorSelect = document.getElementById('doctorSelect');
 const liveWaveformCanvas = document.getElementById('liveWaveformCanvas');
 const recordedWaveformCanvas = document.getElementById('recordedWaveformCanvas');
 const startRecordingBtn = document.getElementById('startRecordingBtn');
@@ -10,9 +12,9 @@ const stopRecordingBtn = document.getElementById('stopRecordingBtn');
 const submitRecordingBtn = document.getElementById('submitRecordingBtn');
 const audioPlayer = document.getElementById('audioPlayer');
 const playRecordedAudioBtn = document.getElementById('playRecordedAudioBtn');
-const downloadRecordingBtn = document.getElementById('downloadRecordingBtn'); 
+const downloadRecordingBtn = document.getElementById('downloadRecordingBtn');
 
-// State variables
+// ---------------- State Variables ----------------
 let isPatientValid = false;
 let isRecording = false;
 let recordedAudioBlob = null;
@@ -21,12 +23,11 @@ let analyser = null;
 let microphoneStream = null;
 let mediaRecorder = null;
 let recordedChunks = [];
-
-// VAD Threshold
-const VAD_THRESHOLD = 0.01; // adjust sensitivity
 let vadInterval;
 
-// Helper to show messages
+const VAD_THRESHOLD = 0.01;
+
+// ---------------- Helper Functions ----------------
 function updateMessage(msg, type='info') {
     messageDisplay.textContent = msg;
     messageDisplay.classList.remove('hidden','bg-red-100','text-red-700','bg-green-100','text-green-700','bg-blue-100','text-blue-700');
@@ -35,7 +36,6 @@ function updateMessage(msg, type='info') {
     else messageDisplay.classList.add('bg-blue-100','text-blue-700');
 }
 
-// Enable/disable buttons
 function setButtonStates() {
     patientIdInput.disabled = isRecording;
     checkPatientIdBtn.disabled = isRecording || !patientIdInput.value.trim();
@@ -45,9 +45,30 @@ function setButtonStates() {
     playRecordedAudioBtn.disabled = !recordedAudioBlob;
     downloadRecordingBtn.disabled = !recordedAudioBlob;
     registerPatientBtn.classList.toggle('hidden', isPatientValid || !patientIdInput.value.trim());
+    doctorDropdownContainer.classList.toggle('hidden', !isPatientValid);
 }
 
-// Check patient ID
+// ---------------- Fetch Doctors ----------------
+async function fetchDoctors() {
+    try {
+        const res = await fetch('/searchDoctors');
+        const data = await res.json();
+        if(data.success) {
+            doctorSelect.innerHTML = '';
+            data.doctors.forEach(d => {
+                const option = document.createElement('option');
+                option.value = d.doctorID;
+                option.text = d.doctorName;
+                doctorSelect.appendChild(option);
+            });
+        }
+    } catch(err) {
+        console.error(err);
+        updateMessage('Failed to fetch doctors','error');
+    }
+}
+
+// ---------------- Check Patient ID ----------------
 async function checkPatientId() {
     const pId = patientIdInput.value.trim();
     if(!pId) return updateMessage('Enter Speaker ID','error');
@@ -60,12 +81,15 @@ async function checkPatientId() {
             body: JSON.stringify({ patientID: pId })
         });
         const data = await res.json();
+
         if(res.ok && data.success) {
             isPatientValid = true;
             updateMessage(`Speaker ID "${pId}" found.`, 'success');
+            await fetchDoctors();  // populate doctor dropdown
         } else {
             isPatientValid = false;
-            updateMessage(data.message || `Speaker ID "${pId}" not found.`, 'error');
+            updateMessage(`Speaker ID "${pId}" not found. Please register.`, 'error');
+            registerPatientBtn.classList.remove('hidden');
         }
     } catch(err) {
         updateMessage('Error checking ID: '+err.message,'error');
@@ -74,7 +98,7 @@ async function checkPatientId() {
     setButtonStates();
 }
 
-// Initialize microphone & waveform
+// ---------------- Microphone & Waveform ----------------
 async function initMicrophone() {
     if(!audioContext) audioContext = new (window.AudioContext||window.webkitAudioContext)();
     if(audioContext.state==='suspended') await audioContext.resume();
@@ -94,7 +118,6 @@ async function initMicrophone() {
     }
 }
 
-// Draw live waveform
 function drawLiveWaveform() {
     const canvasCtx = liveWaveformCanvas.getContext('2d');
     const bufferLength = analyser.frequencyBinCount;
@@ -108,7 +131,7 @@ function drawLiveWaveform() {
         canvasCtx.lineWidth = 2;
         canvasCtx.strokeStyle = '#ff0000';
         canvasCtx.beginPath();
-        const sliceWidth = liveWaveformCanvas.width * 1.0 / bufferLength;
+        const sliceWidth = liveWaveformCanvas.width / bufferLength;
         let x = 0;
         for(let i=0;i<bufferLength;i++){
             const v = dataArray[i]/128.0 - 1.0;
@@ -122,7 +145,7 @@ function drawLiveWaveform() {
     draw();
 }
 
-// Start recording with VAD
+// ---------------- Recording ----------------
 async function startRecording() {
     if(!isPatientValid) return updateMessage('Validate patient ID first','error');
     const micReady = await initMicrophone();
@@ -137,7 +160,6 @@ async function startRecording() {
     mediaRecorder.ondataavailable = e=>{ if(e.data.size>0) recordedChunks.push(e.data); };
     mediaRecorder.start();
 
-    // VAD: pause/resume based on audio level
     const sampleBuffer = new Float32Array(analyser.fftSize);
     vadInterval = setInterval(()=>{
         analyser.getFloatTimeDomainData(sampleBuffer);
@@ -147,7 +169,6 @@ async function startRecording() {
     },100);
 }
 
-// Stop recording
 function stopRecording() {
     if(mediaRecorder && mediaRecorder.state!=='inactive') mediaRecorder.stop();
     isRecording = false;
@@ -159,36 +180,11 @@ function stopRecording() {
         drawRecordedWaveform(recordedAudioBlob);
         updateMessage('Recording stopped. Ready to submit.','success');
         setButtonStates();
-
-        // ✅ Enable download button
-        downloadRecordingBtn.disabled = false;
     };
     setButtonStates();
 }
 
-// ✅ Download Recording Function
-function downloadRecording() {
-    if (!recordedAudioBlob) {
-        updateMessage('No recording available to download', 'error');
-        return;
-    }
-
-    const url = URL.createObjectURL(recordedAudioBlob);
-    const a = document.createElement('a');
-    a.style.display = 'none';
-    a.href = url;
-    const pId = patientIdInput.value.trim() || 'unknown';
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    a.download = `${pId}_recording_${timestamp}.wav`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-
-    updateMessage('Recording downloaded to your device.', 'success');
-}
-
-// Convert WebM to WAV
+// ---------------- Convert WebM to WAV ----------------
 async function convertToWav(webmBlob) {
     const audioCtx = new (window.AudioContext||window.webkitAudioContext)();
     const arrayBuffer = await webmBlob.arrayBuffer();
@@ -223,7 +219,7 @@ async function convertToWav(webmBlob) {
     return new Blob([view],{type:'audio/wav'});
 }
 
-// Draw recorded waveform
+// ---------------- Draw Recorded Waveform ----------------
 async function drawRecordedWaveform(blob){
     const ctx = recordedWaveformCanvas.getContext('2d');
     ctx.clearRect(0,0,recordedWaveformCanvas.width,recordedWaveformCanvas.height);
@@ -252,13 +248,36 @@ async function drawRecordedWaveform(blob){
     ctx.stroke();
 }
 
-// Submit recording
+// ---------------- Timestamped Filename ----------------
+function getTimestampedFileName(patientID) {
+    const now = new Date();
+    const istOffset = 5.5 * 60;
+    const localOffset = now.getTimezoneOffset();
+    const istTime = new Date(now.getTime() + (istOffset + localOffset) * 60000);
+
+    const dd = String(istTime.getDate()).padStart(2,'0');
+    const mm = String(istTime.getMonth()+1).padStart(2,'0');
+    const yyyy = istTime.getFullYear();
+    const HH = String(istTime.getHours()).padStart(2,'0');
+    const MN = String(istTime.getMinutes()).padStart(2,'0');
+    const SS = String(istTime.getSeconds()).padStart(2,'0');
+
+    return `${patientID}_${dd}${mm}${yyyy}_${HH}${MN}${SS}.wav`;
+}
+
+// ---------------- Submit / Download / Play ----------------
 async function submitRecording() {
     if(!recordedAudioBlob) return updateMessage('No audio to submit','error');
     const pId = patientIdInput.value.trim();
+    const doctorName = doctorSelect.options[doctorSelect.selectedIndex].text; // get the name
+    const filename = getTimestampedFileName(pId);
+
+    if(!doctorName) return updateMessage('Please select a doctor','error');
+
     const formData = new FormData();
     formData.append('patientId', pId);
-    formData.append('audioFile', recordedAudioBlob, 'recording.wav');
+    formData.append('doctorName', doctorName);  // ✅ pass doctor name here
+    formData.append('audioFile', recordedAudioBlob, filename);
 
     updateMessage('Submitting recording...');
     try {
@@ -266,7 +285,7 @@ async function submitRecording() {
         const data = await res.json();
         if(res.ok && data.success){
             updateMessage('Recording submitted successfully','success');
-            recordedAudioBlob=null;
+            recordedAudioBlob = null;
             drawRecordedWaveform(null);
         } else updateMessage(data.message||'Failed to submit','error');
     } catch(err){
@@ -275,25 +294,38 @@ async function submitRecording() {
     setButtonStates();
 }
 
-// Play recorded audio
 function playAudio() {
     if(!recordedAudioBlob) return;
-    const url = URL.createObjectURL(recordedAudioBlob);
-    audioPlayer.src = url;
+    audioPlayer.src = URL.createObjectURL(recordedAudioBlob);
     audioPlayer.play();
 }
 
-// Event listeners
+function downloadRecording() {
+    if(!recordedAudioBlob) return updateMessage('No recording to download','error');
+    const pId = patientIdInput.value.trim() || 'unknown';
+    const filename = getTimestampedFileName(pId);
+
+    const url = URL.createObjectURL(recordedAudioBlob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    updateMessage('Recording downloaded to your device.','success');
+}
+
+// ---------------- Event Listeners ----------------
 patientIdInput.addEventListener('input',()=>{isPatientValid=false; updateMessage(''); setButtonStates();});
 checkPatientIdBtn.addEventListener('click',checkPatientId);
 startRecordingBtn.addEventListener('click',startRecording);
 stopRecordingBtn.addEventListener('click',stopRecording);
 submitRecordingBtn.addEventListener('click',submitRecording);
 playRecordedAudioBtn.addEventListener('click',playAudio);
-downloadRecordingBtn.addEventListener('click', downloadRecording);
+downloadRecordingBtn.addEventListener('click',downloadRecording);
 
-// Init
-window.onload = async ()=>{
-    await initMicrophone();
-    setButtonStates();
-};
+// ---------------- Initial Setup ----------------
+setButtonStates();

@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   app:
     build:
@@ -14,7 +12,7 @@ services:
     command: ["./wait-for-it.sh", "db:3306", "--", "node", "new_app.js"]
     volumes:
       - .:/app
-      - /app/node_modules  # prevent overwriting node_modules with empty host copy
+      - /app/node_modules
     environment:
       MYSQL_HOST: db
       MYSQL_USER: root
@@ -22,8 +20,7 @@ services:
       MYSQL_DATABASE: hospitaldb
 
   db:
-    image: mysql:5.7
-    platform: linux/amd64
+    image: mariadb:10.6
     container_name: mysql-db
     restart: always
     environment:
@@ -31,11 +28,10 @@ services:
       MYSQL_DATABASE: hospitaldb
     ports:
       - "3306:3306"
-    command: --max_allowed_packet=734003200  # 700 MB = 700 * 1024 * 1024 bytes
+    command: --max_allowed_packet=734003200
     volumes:
       - db_data:/var/lib/mysql
       - ./database/asrpatientinfo.sql:/docker-entrypoint-initdb.d/init.sql
 
 volumes:
   db_data:
-
